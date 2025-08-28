@@ -146,7 +146,6 @@ export default async function FindCheckerPage({ params }: PageProps) {
   if (urlParams.length > 3) {
     notFound();
   }
-
   return (
     <FindCheckerClient 
       initialCountry={countryDisplay}

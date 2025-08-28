@@ -5,6 +5,7 @@ import { Menu, X, User } from 'lucide-react';
 import MainMenu from './main-menu';
 import MobileMenu from './mobile-menu';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 
 const Header = () => {
@@ -35,10 +36,17 @@ const Header = () => {
           <div className="flex justify-between items-center h-16 md:h-20">
             <div className="flex items-center">
               <Link href="/" className="flex items-center mr-8">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
-                  <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                <div className='relative h-8 w-8' >
+                  <Image
+                   src="/img/logo1.png"
+                   fill
+                   sizes='864px'
+                   className=' object-cover'
+                   alt='Checkerist'
+                   priority
+                  />
                 </div>
-                <span className="text-white text-xl font-bold">CheckerIST</span>
+                <span className="text-white text-xl font-bold">CheckerIst</span>
               </Link>
               
               {/* Desktop Menu */}
@@ -57,7 +65,7 @@ const Header = () => {
                   Become Checker
                 </Link>
                 <Link
-                  href="/others-pages/signup"
+                  href="/sign-in"
                   className="border border-white text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors duration-200"
                 >
                   Sign In / Register
@@ -67,7 +75,7 @@ const Header = () => {
               {/* Mobile Menu Icons */}
               <div className="flex xl:hidden items-center space-x-4 ml-4">
                 <Link
-                  href="/others-pages/login"
+                  href="/sign-in"
                   className="text-white hover:text-gray-300 transition-colors duration-200"
                 >
                   <User className="h-6 w-6" />

@@ -1,0 +1,718 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+enum UserRole {
+  USER
+  CHECKER
+  ADMIN
+  SUPER_ADMIN
+}
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+model User {
+  id                String     @id @default(cuid())
+  email             String     @unique
+  emailVerified     DateTime?
+  firstName         String
+  lastName          String
+  phone             String?
+  avatar            String?
+  role              UserRole   @default(USER)
+  status            UserStatus @default(ACTIVE) 
+  // Authentication
+  password          String?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  verificationToken String?
+  // Profile
+  bio               String?
+  dateOfBirth       DateTime?
+  gender            String?
+  nationality       String?
+  languages         String[] // JSON array of language codes
+  // Address
+  address           String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+  coordinates       Json? // {lat: number, lng: number}
+  // Platform settings
+  notificationSettings Json? // Notification preferences
+  preferences       Json? // User preferences
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLoginAt       DateTime?
+  // Relations
+  checkerProfile    CheckerProfile?
+  bookings          Booking[]
+  reviews           Review[]
+  reviewsReceived   Review[] @relation("ReviewTarget")
+  payments          Payment[]
+  disputes          Dispute[]
+  notifications     Notification[]
+  supportTickets    SupportTicket[]
+  sentMessages      Message[]
+  @@map("users")
+}
+
+// ============================================================================
+// CHECKER PROFILES & SERVICES
+// ============================================================================
+
+enum CheckerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model CheckerProfile {
+  id                    String             @id @default(cuid())
+  userId                String             @unique
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Professional Info
+  businessName          String?
+  professionalTitle     String
+  description           String
+  yearsOfExperience     Int                @default(0)
+  
+  // Verification
+  status                CheckerStatus      @default(PENDING)
+  verificationStatus    VerificationStatus @default(PENDING)
+  verificationDocuments String[] // URLs to uploaded documents
+  verifiedAt            DateTime?
+  
+  // Business Details
+  businessAddress       String?
+  businessCity          String?
+  businessCountry       String?
+  businessPhone         String?
+  businessEmail         String?
+  businessLicense       String?
+  taxId                 String?
+  
+  // Service Areas
+  serviceRadius         Int? // in kilometers
+  coverageAreas         String[] // Array of city/region names
+  
+  // Availability
+  isAvailable           Boolean            @default(true)
+  responseTime          String? // "within-1-hour", "same-day", etc.
+  workingHours          Json? // {monday: {start: "09:00", end: "17:00"}, ...}
+  
+  // Pricing
+  basePrice             Decimal            @default(0)
+  currency              String             @default("USD")
+  pricePerHour          Decimal?
+  minimumBooking        Int? // minimum hours
+  
+  // Statistics
+  totalBookings         Int                @default(0)
+  completedBookings     Int                @default(0)
+  averageRating         Decimal            @default(0)
+  totalReviews          Int                @default(0)
+  totalEarnings         Decimal            @default(0)
+  
+  // Platform fees
+  commissionRate        Decimal            @default(0.15) // 15% default
+  
+  // Stripe Connect
+  stripeAccountId       String? // Stripe Connect account ID
+  stripeAccountStatus   String? // "pending", "enabled", "disabled"
+  
+  // Timestamps
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  
+  // Relations
+  services              CheckerService[]
+  specialties           CheckerSpecialty[]
+  certifications        Certification[]
+  portfolio             PortfolioItem[]
+  availability          Availability[]
+  bookings              Booking[]
+  payouts               Payout[]
+  
+  @@map("checker_profiles")
+}
+
+model CheckerService {
+  id          String         @id @default(cuid())
+  checkerId   String
+  checker     CheckerProfile @relation(fields: [checkerId], references: [id], onDelete: Cascade)
+  
+  name        String
+  description String
+  price       Decimal
+  duration    Int // in minutes
+  isActive    Boolean        @default(true)
+  
+  // Service details
+  includes    String[] // What's included in the service
+  requirements String[] // Requirements from client
+  
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // Relations
+  bookings    Booking[]
+  
+  @@map("checker_services")
+}
+
+model CheckerSpecialty {
+  id        String         @id @default(cuid())
+  checkerId String
+  checker   CheckerProfile @relation(fields: [checkerId], references: [id], onDelete: Cascade)
+  
+  category  String // "hotels", "restaurants", "apartments", etc.
+  subcategory String? // "luxury-hotels", "budget-hotels", etc.
+  level     String // "beginner", "intermediate", "expert"
+  
+  createdAt DateTime       @default(now())
+  
+  @@unique([checkerId, category, subcategory])
+  @@map("checker_specialties")
+}
+
+model Certification {
+  id          String         @id @default(cuid())
+  checkerId   String
+  checker     CheckerProfile @relation(fields: [checkerId], references: [id], onDelete: Cascade)
+  
+  name        String
+  issuer      String
+  issueDate   DateTime
+  expiryDate  DateTime?
+  credentialId String?
+  documentUrl String?
+  isVerified  Boolean        @default(false)
+  
+  createdAt   DateTime       @default(now())
+  
+  @@map("certifications")
+}
+
+model PortfolioItem {
+  id          String         @id @default(cuid())
+  checkerId   String
+  checker     CheckerProfile @relation(fields: [checkerId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String
+  images      String[] // URLs to images
+  projectDate DateTime
+  location    String?
+  client      String? // Anonymous or with permission
+  
+  createdAt   DateTime       @default(now())
+  
+  @@map("portfolio_items")
+}
+
+// ============================================================================
+// AVAILABILITY & SCHEDULING
+// ============================================================================
+
+enum AvailabilityType {
+  AVAILABLE
+  BUSY
+  BLOCKED
+}
+
+model Availability {
+  id        String           @id @default(cuid())
+  checkerId String
+  checker   CheckerProfile   @relation(fields: [checkerId], references: [id], onDelete: Cascade)
+  
+  date      DateTime
+  startTime String // "09:00"
+  endTime   String // "17:00"
+  type      AvailabilityType @default(AVAILABLE)
+  note      String?
+  
+  createdAt DateTime         @default(now())
+  
+  @@unique([checkerId, date, startTime])
+  @@map("availability")
+}
+
+// ============================================================================
+// BOOKINGS & TRANSACTIONS
+// ============================================================================
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Booking {
+  id                String         @id @default(cuid())
+  bookingNumber     String         @unique // Human-readable booking number
+  
+  // Parties
+  userId            String
+  user              User           @relation(fields: [userId], references: [id])
+  checkerId         String
+  checker           CheckerProfile @relation(fields: [checkerId], references: [id])
+  serviceId         String?
+  service           CheckerService? @relation(fields: [serviceId], references: [id])
+  
+  // Booking Details
+  status            BookingStatus  @default(PENDING)
+  scheduledDate     DateTime
+  scheduledTime     String // "14:00"
+  duration          Int // in minutes
+  location          String
+  coordinates       Json? // {lat: number, lng: number}
+  
+  // Pricing
+  basePrice         Decimal
+  additionalFees    Json? // {name: string, amount: number}[]
+  discountAmount    Decimal        @default(0)
+  totalAmount       Decimal
+  currency          String         @default("USD")
+  
+  // Platform fees
+  platformFee       Decimal
+  checkerEarnings   Decimal
+  
+  // Service Details
+  serviceTitle      String
+  serviceDescription String
+  specialRequests   String?
+  
+  // Status tracking
+  confirmedAt       DateTime?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  cancellationReason String?
+  
+  // Communication
+  notes             String?
+  internalNotes     String? // Admin notes
+  
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  // Relations
+  payments          Payment[]
+  reviews           Review[]
+  disputes          Dispute[]
+  messages          Message[]
+  
+  @@map("bookings")
+}
+
+// ============================================================================
+// PAYMENT SYSTEM
+// ============================================================================
+
+enum PaymentMethod {
+  STRIPE_CARD
+  STRIPE_BANK
+  PAYPAL
+  APPLE_PAY
+  GOOGLE_PAY
+  BANK_TRANSFER
+}
+
+enum PaymentType {
+  BOOKING_PAYMENT
+  REFUND
+  PAYOUT
+  PLATFORM_FEE
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  
+  // Basic Info
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  bookingId         String?
+  booking           Booking?      @relation(fields: [bookingId], references: [id])
+  
+  // Payment Details
+  type              PaymentType
+  method            PaymentMethod
+  status            PaymentStatus @default(PENDING)
+  amount            Decimal
+  currency          String        @default("USD")
+  
+  // External Payment Provider
+  stripePaymentId   String? // Stripe Payment Intent ID
+  stripeChargeId    String? // Stripe Charge ID
+  paypalOrderId     String? // PayPal Order ID
+  externalReference String? // Other payment provider reference
+  
+  // Fees
+  platformFee       Decimal       @default(0)
+  processingFee     Decimal       @default(0)
+  netAmount         Decimal // Amount after fees
+  
+  // Metadata
+  description       String?
+  metadata          Json? // Additional payment metadata
+  failureReason     String?
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  processedAt       DateTime?
+  
+  // Relations
+  refunds           Refund[]
+  
+  @@map("payments")
+}
+
+model Refund {
+  id              String        @id @default(cuid())
+  paymentId       String
+  payment         Payment       @relation(fields: [paymentId], references: [id])
+  
+  amount          Decimal
+  reason          String
+  status          PaymentStatus @default(PENDING)
+  
+  // External references
+  stripeRefundId  String?
+  paypalRefundId  String?
+  
+  processedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  
+  @@map("refunds")
+}
+
+// ============================================================================
+// PAYOUT SYSTEM
+// ============================================================================
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Payout {
+  id                String         @id @default(cuid())
+  checkerId         String
+  checker           CheckerProfile @relation(fields: [checkerId], references: [id])
+  
+  amount            Decimal
+  currency          String         @default("USD")
+  status            PayoutStatus   @default(PENDING)
+  
+  // Period covered
+  periodStart       DateTime
+  periodEnd         DateTime
+  
+  // External references
+  stripeTransferId  String?
+  paypalPayoutId    String?
+  
+  // Metadata
+  bookingIds        String[] // Bookings included in this payout
+  fees              Decimal  @default(0)
+  netAmount         Decimal
+  
+  processedAt       DateTime?
+  createdAt         DateTime @default(now())
+  
+  @@map("payouts")
+}
+
+// ============================================================================
+// REVIEWS & RATINGS
+// ============================================================================
+
+model Review {
+  id          String   @id @default(cuid())
+  
+  // Parties
+  reviewerId  String
+  reviewer    User     @relation(fields: [reviewerId], references: [id])
+  targetId    String
+  target      User     @relation("ReviewTarget", fields: [targetId], references: [id])
+  bookingId   String
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  
+  // Review Content
+  rating      Int // 1-5 stars
+  title       String?
+  comment     String
+  
+  // Detailed Ratings
+  communication Int? // 1-5
+  punctuality   Int? // 1-5
+  quality       Int? // 1-5
+  value         Int? // 1-5
+  
+  // Metadata
+  isPublic    Boolean  @default(true)
+  isVerified  Boolean  @default(false)
+  
+  // Response
+  response    String? // Checker's response to review
+  respondedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([bookingId, reviewerId])
+  @@map("reviews")
+}
+
+// ============================================================================
+// MESSAGING SYSTEM
+// ============================================================================
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  bookingId String
+  booking   Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  senderId  String
+  sender    User        @relation(fields: [senderId], references: [id])
+  
+  type      MessageType @default(TEXT)
+  content   String
+  fileUrl   String? // For images/files
+  fileName  String? // Original filename
+  
+  isRead    Boolean     @default(false)
+  readAt    DateTime?
+  
+  createdAt DateTime    @default(now())
+  
+  @@map("messages")
+}
+
+// ============================================================================
+// DISPUTE SYSTEM
+// ============================================================================
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  CLOSED
+}
+
+enum DisputeType {
+  SERVICE_QUALITY
+  NO_SHOW
+  PAYMENT_ISSUE
+  COMMUNICATION
+  OTHER
+}
+
+model Dispute {
+  id          String        @id @default(cuid())
+  
+  bookingId   String
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  raisedById  String
+  raisedBy    User          @relation(fields: [raisedById], references: [id])
+  
+  type        DisputeType
+  status      DisputeStatus @default(OPEN)
+  
+  title       String
+  description String
+  evidence    String[] // URLs to evidence files
+  
+  // Resolution
+  resolution  String?
+  resolvedBy  String? // Admin user ID
+  resolvedAt  DateTime?
+  
+  // Refund details
+  refundAmount Decimal?
+  refundReason String?
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@map("disputes")
+}
+
+// ============================================================================
+// NOTIFICATION SYSTEM
+// ============================================================================
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  PAYMENT_RECEIVED
+  REVIEW_RECEIVED
+  MESSAGE_RECEIVED
+  DISPUTE_OPENED
+  PAYOUT_PROCESSED
+  SYSTEM_ANNOUNCEMENT
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type      NotificationType
+  title     String
+  message   String
+  data      Json? // Additional data for the notification
+  
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  
+  createdAt DateTime         @default(now())
+  
+  @@map("notifications")
+}
+
+// ============================================================================
+// SUPPORT SYSTEM
+// ============================================================================
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model SupportTicket {
+  id          String         @id @default(cuid())
+  ticketNumber String        @unique
+  
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  
+  subject     String
+  description String
+  category    String // "payment", "booking", "technical", etc.
+  
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  
+  assignedTo  String? // Admin user ID
+  
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  resolvedAt  DateTime?
+  
+  @@map("support_tickets")
+}
+
+// ============================================================================
+// PLATFORM ANALYTICS
+// ============================================================================
+
+model PlatformMetrics {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  
+  // User metrics
+  totalUsers      Int      @default(0)
+  newUsers        Int      @default(0)
+  activeUsers     Int      @default(0)
+  
+  // Checker metrics
+  totalCheckers   Int      @default(0)
+  newCheckers     Int      @default(0)
+  activeCheckers  Int      @default(0)
+  
+  // Booking metrics
+  totalBookings   Int      @default(0)
+  newBookings     Int      @default(0)
+  completedBookings Int    @default(0)
+  cancelledBookings Int    @default(0)
+  
+  // Financial metrics
+  totalRevenue    Decimal  @default(0)
+  platformFees    Decimal  @default(0)
+  payouts         Decimal  @default(0)
+  
+  // Quality metrics
+  averageRating   Decimal  @default(0)
+  totalReviews    Int      @default(0)
+  disputeRate     Decimal  @default(0)
+  
+  createdAt       DateTime @default(now())
+  
+  @@map("platform_metrics")
+}
+
+// ============================================================================
+// SYSTEM CONFIGURATION
+// ============================================================================
+
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  
+  updatedAt   DateTime @updatedAt
+  updatedBy   String? // Admin user ID
+  
+  @@map("system_config")
+}

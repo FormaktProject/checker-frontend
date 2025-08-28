@@ -6,7 +6,8 @@ import TestimonialSection from './_component/testemonial-section'
 import Footer from './_component/footer'
 import FeaturesSection from './_component/recomanded-hotel'
 import AboutUsSection from './_component/aboutus/about-us'
-import ContactSection from './_component/contact/contact-section'
+import ContactForm from './_component/contact/new-contcatfile'
+
 
 const HomePage = () => {
   return (
@@ -39,24 +40,17 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* Add Banner Section */}
-      
-          <AddBanner />
-      
-
+      <AddBanner />
       {/* Recommended Hotels Section */}
       <FeaturesSection/>
-
       <AboutUsSection/>
-
       {/* Testimonial Section */}
       <section className="py-10 mt-10 lg:py-15 bg-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TestimonialSection />
         </div>
       </section>
-
       {/* Blog Section 
       <section className="py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,7 +82,7 @@ const HomePage = () => {
       </section>
 
       <CallToActions />*/}
-      <ContactSection/>
+      <ContactForm/>
       <Footer />
     </div>
   )

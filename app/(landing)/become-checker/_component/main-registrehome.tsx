@@ -49,11 +49,8 @@ const MainRegister = () => {
   ]
   return (
     <div className='h-full bg-white'>
-        {/** How it work */}
-        <HowItWorksSection/>
-        
-        {/** Register form */}
-        <section className="flex items-center justify-center py-16 bg-gray-900/95">
+              {/** Register form */}
+        <section className="flex items-center justify-center py-10 bg-gray-900/95">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               {/* Left Column - Content */}
@@ -66,19 +63,16 @@ const MainRegister = () => {
                     #1 Platform for Travel Checkers
                   </span>
                 </div>
-
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
                   Earn Money as a
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
                     Checker
                   </span>
                 </h1>
-
                 <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
                   Join thousands of professionals earning <strong className="text-green-400">$50-200/day</strong> by
                   guiding tourists and checking accommodations worldwide
                 </p>
-
                 {/* Key Benefits */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center">
@@ -128,6 +122,10 @@ const MainRegister = () => {
             </div>
           </div>
         </section>
+        {/** How it work */}
+        <HowItWorksSection/>
+        
+
         <section className='bg-white mt-10 py-10 md:py-15  px-4'>
              <div className=' text-lg flex items-center justify-center p-8 md:p-10 '>
                 <h2 className=' text-gray-950/95 text-lg md:text-3xl font-bold text-center'>Frequently Asked Questions</h2>

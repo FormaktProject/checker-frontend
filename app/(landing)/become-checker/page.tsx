@@ -21,33 +21,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "http://localhost:3000/register-checker",
-    title: "Earn $50-200/Day as a Travel Guide & Accommodation Checker | CheckerIst",
-    description:
-      "Turn your travel knowledge into income. Join our network of professional guides and accommodation checkers. Flexible work, great pay, global opportunities.",
-    siteName: "GoTrip",
-    images: [
-      {
-        url: "https://gotrip.com/images/og-become-expert.png",
-        width: 1200,
-        height: 630,
-        alt: "Become a Travel Expert with GoTrip - Earn Money Guiding Tourists",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Earn Money as a Travel Guide & Accommodation Checker | CheckerIst",
-    description:
-      "Join thousands earning $50-200/day by guiding tourists and checking accommodations. Start your profitable travel career today.",
-    images: ["https://gotrip.com/images/og-become-expert.png"],
-    creator: "@CheckerIst",
-  },
   alternates: {
-    canonical: "https://gotrip.com/register-checker",
+    canonical: "http://localhost:3000/become-checker",
   },
   other: {
     "article:section": "Travel Careers",
