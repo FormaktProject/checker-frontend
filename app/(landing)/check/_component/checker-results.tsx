@@ -95,15 +95,12 @@ const CheckerResults = ({ checkers }: CheckerResultsProps) => {
                             <MapPin className="h-4 w-4 mr-1" />
                             {checker.location.city}, {checker.location.country}
                           </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {checker.experience} experience
-                          </div>
+                          
                         </div>
                       </div>
                     </div>
 
-                    {/* Rating and Reviews */}
+                    {/* Rating and Reviews 
                     <div className="flex items-center mb-3">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
@@ -126,14 +123,14 @@ const CheckerResults = ({ checkers }: CheckerResultsProps) => {
                       <div className="ml-4 text-sm text-gray-600">
                         {checker.completedChecks} completed checks
                       </div>
-                    </div>
+                    </div>*/}
 
                     {/* Description */}
                     <p className="text-gray-700 mb-4 leading-relaxed">
                       {checker.description}
                     </p>
 
-                    {/* Specialties */}
+                    {/* Specialties 
                     <div className="mb-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Specialties:</h4>
                       <div className="flex flex-wrap gap-2">
@@ -146,7 +143,7 @@ const CheckerResults = ({ checkers }: CheckerResultsProps) => {
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </div>*/}
 
                     {/* Coverage Area and Languages */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -164,17 +161,26 @@ const CheckerResults = ({ checkers }: CheckerResultsProps) => {
                         </div>
                       </div>
                     </div>
-
-                    {/* Response Time */}
+                    <div className=" flex items-center gap-2.5">
+                      <div className="flex items-center justify-center lg:justify-end text-sm text-gray-600">
+                        <Shield className="h-4 w-4 mr-1 text-green-500" />
+                        <span>Background verified</span>
+                      </div>
+                      <div className="flex items-center justify-center lg:justify-end text-sm text-gray-600">
+                        <CheckCircle className="h-4 w-4 mr-1 text-blue-500" />
+                        <span>Identity confirmed</span>
+                      </div>
+                    </div>
+                    {/* Response Time 
                     <div className="flex items-center text-sm text-green-600 mb-4">
                       <MessageCircle className="h-4 w-4 mr-1" />
                       <span className="font-medium">Response time: {checker.responseTime}</span>
-                    </div>
+                    </div>*/}
                   </div>
 
                   {/* Price and Action Section */}
                   <div className="lg:w-48 lg:text-right mt-4 lg:mt-0">
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-gray-50 rounded-lg p-2">
                       <div className="text-center lg:text-right">
                         <div className="text-sm text-gray-600 mb-1">Starting from</div>
                         <div className="text-3xl font-bold text-gray-900 mb-1">
@@ -196,16 +202,7 @@ const CheckerResults = ({ checkers }: CheckerResultsProps) => {
                     </div>
 
                     {/* Trust Indicators */}
-                    <div className="mt-4 space-y-2">
-                      <div className="flex items-center justify-center lg:justify-end text-sm text-gray-600">
-                        <Shield className="h-4 w-4 mr-1 text-green-500" />
-                        <span>Background verified</span>
-                      </div>
-                      <div className="flex items-center justify-center lg:justify-end text-sm text-gray-600">
-                        <CheckCircle className="h-4 w-4 mr-1 text-blue-500" />
-                        <span>Identity confirmed</span>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

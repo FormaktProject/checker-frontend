@@ -2,8 +2,8 @@
 import { ArrowRight, CheckCircle, Clock, DollarSign, Globe, Play, Shield, Star, TrendingUp, Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import HowItWorksSection from './how-it-work'
-import CheckerRegistrationForm from './checker-register-form'
 import CheckerFaq from './faq'
+import CheckerRegistrationForm from './checker-register'
 
 const MainRegister = () => {
      const [isVisible, setIsVisible] = useState(false)

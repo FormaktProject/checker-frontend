@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import FindCheckerClient from '../_component/find-checker-cleint';
+//import FindCheckerClient from '../_component/find-checker-cleint';
 import { getOriginalName } from '@/hook/correct-rul';
+import FindCheckerClient from '../_component/find-checker-client-new';
 
 interface PageProps {
   params: Promise<{
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     keywords = `accommodation checker ${countryDisplay}, ${countryDisplay} property inspector`;
   }
 
-  const baseUrl = 'http://localhost:3000'; // Replace with production URL
+  const baseUrl = 'https://www.checkerist.com'; // Replace with production URL
   const currentUrl = urlParams.length > 0 
     ? `${baseUrl}/check/${urlParams.join('/')}`
     : `${baseUrl}/check`;
@@ -147,7 +148,7 @@ export default async function FindCheckerPage({ params }: PageProps) {
     notFound();
   }
   return (
-    <FindCheckerClient 
+    <FindCheckerClient
       initialCountry={countryDisplay}
       initialCity={cityDisplay}
       initialAccommodation={accommodationDisplay}

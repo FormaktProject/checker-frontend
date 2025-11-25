@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "http://localhost:3000/become-checker",
+    canonical: "https://www.checkerist.com/become-checker",
   },
   other: {
     "article:section": "Travel Careers",

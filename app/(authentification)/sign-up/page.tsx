@@ -1,11 +1,21 @@
 import React from 'react'
-
-const SignUpPage = () => {
+import SignUpPage from './_component/sign-up-page'
+export const metadata = {
+ title: 'Sign Up - Join Checkerist | Professional Verification Platform',
+ description: 'Create your Checkerist account to access professional verification services. Join thousands of users trusting our platform for quality checks.',
+keywords: 'sign up, register, checker platform, verification services, create account',
+openGraph: {
+ title: 'Sign Up - Checkerist',
+description: 'Join the leading verification platform today',
+type: 'website',
+}
+};
+const SignUpMain = async() => {
   return (
-    <div className='z-10 pt-32 text-white flex items-center justify-center p-6 rounded-xl' >
-      The Page of Sign-Up
+    <div className='z-10 pt-10 text-white flex items-center justify-center p-6 rounded-xl' >
+      <SignUpPage/>
     </div>
   )
 }
 
-export default SignUpPage
+export default SignUpMain

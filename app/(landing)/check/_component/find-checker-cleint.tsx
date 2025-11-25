@@ -16,7 +16,6 @@ interface FindCheckerClientProps {
   initialAccommodation?: string;
 }
 
-
 export default function FindCheckerClient({ 
   initialCountry = '', 
   initialCity = '', 

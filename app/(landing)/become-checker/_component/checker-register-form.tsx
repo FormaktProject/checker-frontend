@@ -1,16 +1,11 @@
 "use client"
-
 import { useState, useLayoutEffect, useRef } from "react"
 import { CheckCircle, User, Briefcase, Settings } from "lucide-react"
-
-
 import { FormData, ValidationErrors } from "../type-data"
 import PersonalInfoStep from "./personal-info-step"
 import ProfileInfoStep from "./profile-info-step"
 import SuccessStep from "./succes-step"
 import ServiceDetailsStep from "./services-details-step"
-
-
 const CheckerRegistrationForm = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
