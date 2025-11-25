@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   
   // Store role in state for callback
   const state = Buffer.from(JSON.stringify({ role })).toString("base64")
-  const nextpublicurl = "https://localhost:3000"//process.env.NEXT_PUBLIC_APP_URL 
+  const nextpublicurl = process.env.NEXT_PUBLIC_APP_URL 
   const params = new URLSearchParams({
     client_id: process.env.CLIENT_ID!,
     redirect_uri: `${nextpublicurl}/api/auth/google/callback`,
