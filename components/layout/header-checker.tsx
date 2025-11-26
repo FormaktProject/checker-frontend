@@ -1,7 +1,8 @@
 "use client"
 
+import { logout } from "@/auth"
 import { getUserSession } from "@/lib/get-user-session"
-import { Bell, ChevronDown, LogOut, Menu, Search, Settings, User2 } from "lucide-react"
+import { Bell, ChevronDown, Loader2, LogOut, Menu, Search, Settings, User2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const Header = ({ 
@@ -12,8 +13,18 @@ const Header = ({
   
 }) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
+  
   const [loading, setLoading] = useState(false)
     const [data, setData] = useState<any | null>(null)
+    const [LoadingOut, setLoadingOut] = useState(false)
+     const handelLogout = async()=>{
+      try{
+        setLoadingOut(true)
+        await logout()
+      }catch(error){
+        console.log('error', error)
+      }
+     }
     const loaduserdata = async()=>{
       try{
         setLoading(true)
@@ -106,8 +117,8 @@ const Header = ({
                     </a>
                   </div>
                   <div className="p-2 border-t border-gray-200">
-                    <button className="w-full flex items-center gap-2 px-3 py-2 hover:bg-red-50 text-red-600 rounded-lg">
-                      <LogOut className="w-4 h-4" />
+                    <button onClick={handelLogout} className="w-full flex items-center gap-2 px-3 py-2 hover:bg-red-50 text-red-600 rounded-lg">
+                      { LoadingOut ? <Loader2 className="size-6 animate-spin "/>: <LogOut className="w-4 h-4" />}
                       <span className="text-sm">Logout</span>
                     </button>
                   </div>

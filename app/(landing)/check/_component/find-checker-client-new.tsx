@@ -72,7 +72,7 @@ export default function FindCheckerClient({
 
       const response = await fetch(`/api/find-checker?${params}`)
       const data = await response.json()
-      console.log("serevr data :", data)
+      
       setSearchResults(data.data || [])
       setTotalResults(data.total || 0)
     } catch (error) {

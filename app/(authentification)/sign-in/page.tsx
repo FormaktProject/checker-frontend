@@ -1,6 +1,8 @@
 import React, { Suspense } from 'react'
 import SignInPage from './_component/sign-in-form'
 import { Loader2 } from 'lucide-react';
+import { getSession } from '@/auth';
+import { redirect } from 'next/navigation';
 export const metadata = {
 title: 'Sign In - Checkerist | Access Your Account',
 description: 'Sign in to your Checkerist account to manage bookings, track services, and connect with professional checkers.',
@@ -13,6 +15,10 @@ openGraph: {
 };
 
 const SigninMain = async() => {
+  const session = await getSession()
+  if(session && session.user.id && session.user.role){
+    redirect(`/${session.user.role.toLocaleLowerCase()}`)
+  }
   return (
     
         <Suspense fallback={<LoadingFallback />}>

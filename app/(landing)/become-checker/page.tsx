@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import React from 'react'
 import MainRegister from './_component/main-registrehome'
+import { getSession } from '@/auth'
+import { redirect } from 'next/navigation'
 export const metadata: Metadata = {
   title: "Become a Professional Travel Guide & Accommodation Checker | Earn Money Online - CheckerIst",
   description:
@@ -29,9 +31,13 @@ export const metadata: Metadata = {
     "article:tag": "travel guide jobs, accommodation checker, earn money online, tourism jobs",
   },
 }
-const HomeChecker = () => {
+const HomeChecker = async() => {
+  const session = await getSession()
+    if(session && session.user.id && session.user.role){
+      redirect(`/${session.user.role.toLocaleLowerCase()}`)
+    }
   return (
-    <div className='pt-32  bg-white'>
+    <div className='pt-16 md:pt-20  bg-white'>
        <MainRegister/>
     </div>
   )

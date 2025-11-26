@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, ChevronRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import Image from "next/image";
 
 interface MobileMenuProps {
   onClose: () => void;
@@ -56,12 +57,19 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200">
-        <Link href="/" onClick={onClose} className="flex items-center">
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
-            <div className="w-4 h-4 bg-white rounded-full"></div>
-          </div>
-          <span className="text-gray-900 text-xl font-bold">GoTrip</span>
-        </Link>
+        <Link href="/" className="flex items-center mr-8">
+                <div className='relative h-8 w-8' >
+                  <Image
+                   src="/img/logo1.png"
+                   fill
+                   sizes='864px'
+                   className=' object-cover'
+                   alt='Checkerist'
+                   priority
+                  />
+                </div>
+                <span className="text-teal-500 text-xl font-bold">CheckerIst</span>
+              </Link>
         <button
           onClick={onClose}
           className="p-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"

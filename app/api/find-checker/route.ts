@@ -75,6 +75,8 @@ export async function GET(request: NextRequest) {
           select: {
             avatar: true,
             languages:true,
+            firstName:true,
+            lastName:true,
           },
         },
         specialties: {
@@ -91,7 +93,7 @@ export async function GET(request: NextRequest) {
     // Transform data to match frontend interface
     const formattedCheckers = checkers.map((checker) => ({
       id: checker.id,
-      name: checker.businessName || checker.professionalTitle,
+      name: checker.user.firstName+' '+ checker.user.lastName || checker.professionalTitle,
       profileImage: checker.user?.avatar || "/placeholder.svg",
       rating: Number(checker.averageRating) || 0,
       reviews: checker.totalReviews,

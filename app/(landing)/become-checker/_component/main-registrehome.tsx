@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import HowItWorksSection from './how-it-work'
 import CheckerFaq from './faq'
 import CheckerRegistrationForm from './checker-register'
+import SuccessStorySection from './success-story'
 
 const MainRegister = () => {
      const [isVisible, setIsVisible] = useState(false)
@@ -77,19 +78,19 @@ const MainRegister = () => {
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>Work From Anywhere</span>
+                    <span>1 Year Free Access</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>Flexible Schedule</span>
+                    <span>Recommended Badge</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>High Earnings</span>
+                    <span>0% Commission Forever</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>Global Opportunities</span>
+                    <span>Top List Placement</span>
                   </div>
                 </div>
 
@@ -99,16 +100,11 @@ const MainRegister = () => {
                     onClick={() => setShowForm(true)}
                     className="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center justify-center"
                   >
-                    Start Earning Today
+                     Become Early Checker
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </button>
-                  <button className="border-2 border-white/30 backdrop-blur-sm text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center">
-                    <Play className="mr-2 h-5 w-5" />
-                    Watch How It Works
-                  </button>
-                </div>
-
-               
+                  
+                </div>              
               </div>
 
               {/* Right Column - Form */}
@@ -125,7 +121,7 @@ const MainRegister = () => {
         {/** How it work */}
         <HowItWorksSection/>
         
-
+        <SuccessStorySection/>
         <section className='bg-white mt-10 py-10 md:py-15  px-4'>
              <div className=' text-lg flex items-center justify-center p-8 md:p-10 '>
                 <h2 className=' text-gray-950/95 text-lg md:text-3xl font-bold text-center'>Frequently Asked Questions</h2>

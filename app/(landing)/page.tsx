@@ -7,9 +7,15 @@ import Footer from './_component/footer'
 import FeaturesSection from './_component/recomanded-hotel'
 import AboutUsSection from './_component/aboutus/about-us'
 import ContactForm from './_component/contact/new-contcatfile'
+import { getSession } from '@/auth'
+import { redirect } from 'next/navigation'
 
 
-const HomePage = () => {
+const HomePage = async() => {
+  const session = await getSession()
+    if(session && session.user.id && session.user.role){
+      redirect(`/${session.user.role.toLocaleLowerCase()}`)
+    }
   return (
     <div className=' h-full'>
       {/** hero compoent */}

@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 //import FindCheckerClient from '../_component/find-checker-cleint';
 import { getOriginalName } from '@/hook/correct-rul';
 import FindCheckerClient from '../_component/find-checker-client-new';
+import { getSession } from '@/auth';
 
 interface PageProps {
   params: Promise<{
@@ -131,6 +132,10 @@ export async function generateStaticParams() {
 }
 
 export default async function FindCheckerPage({ params }: PageProps) {
+  const session = await getSession()
+    if(session && session.user.id && session.user.role){
+      redirect(`/${session.user.role.toLocaleLowerCase()}`)
+    }
   const sulg  = await params;
   const urlParams = sulg.params || [];
   const countrySlug = urlParams[0] ? decodeURIComponent(urlParams[0]) : '';
