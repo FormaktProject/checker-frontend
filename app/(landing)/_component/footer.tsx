@@ -50,16 +50,11 @@ const Footer = () => {
             <div className="lg:col-span-2">
               <h5 className="text-lg font-semibold text-white mb-6">Contact Us</h5>
               <div className="space-y-4">
+                
                 <div>
-                  <p className="text-sm text-white mb-1">Toll Free Customer Care</p>
-                  <a href="tel:+11234567890" className="text-lg font-medium text-white">
-                    +(1) 123 456 7890
-                  </a>
-                </div>
-                <div>
-                  <p className="text-sm text-white mb-1">Need live support?</p>
-                  <a href="mailto:hi@example.com" className="text-lg font-medium text-white">
-                    hi@example.com
+                  
+                  <a href="mailto:contact@checkerist.com" className="text-lg font-medium text-white">
+                    contact@checkerist.com
                   </a>
                 </div>
               </div>
@@ -87,7 +82,7 @@ const Footer = () => {
             </div>
 
             {/* Footer Links */}
-            {footerSections.map((section) => (
+            {/*footerSections.map((section) => (
               <div key={section.title}>
                 <h5 className="text-lg font-semibold text-white mb-6">{section.title}</h5>
                 <ul className="space-y-3">
@@ -103,7 +98,7 @@ const Footer = () => {
                   ))}
                 </ul>
               </div>
-            ))}
+            ))*/}
           </div>
         </div>
 
@@ -142,7 +137,7 @@ const Footer = () => {
                 </button>
               </div>
 
-              {/* Social Links */}
+              {/* Social Links 
               <div className="flex items-center space-x-4">
                 {socialLinks.map((social) => {
                   const IconComponent = social.icon;
@@ -157,7 +152,7 @@ const Footer = () => {
                     </a>
                   );
                 })}
-              </div>
+              </div>*/}
             </div>
             
           </div>

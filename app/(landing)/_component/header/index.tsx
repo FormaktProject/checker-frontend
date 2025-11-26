@@ -62,7 +62,7 @@ const Header = () => {
                   href="/become-checker"
                   className="bg-white text-gray-900 px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors duration-200"
                 >
-                  Become Checker
+                  Become Early Checker
                 </Link>
                 <Link
                   href="/sign-in"

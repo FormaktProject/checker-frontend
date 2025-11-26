@@ -64,21 +64,25 @@ const MainRegister = () => {
                     #1 Platform for Travel Checkers
                   </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                  Earn Money as a
+                <h1 className="text-4xl  md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                  Earn Side Money as
+                  Travel Agent,
                   <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
                     Checker
-                  </span>
+                  </span>  
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
-                  Join thousands of professionals earning <strong className="text-green-400">$50-200/day</strong> by
-                  guiding tourists and checking accommodations worldwide
+                  A checkerist is a <span className='text-green-500'>travel agent</span> who inspects hotels, Airbnbs, and accommodations for travelers around the world in his area of expertise,
+                   earning between <span className=' text-green-500'>$30 and $150 </span>per check.
                 </p>
                 {/* Key Benefits */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className='col-span-2'>
+                    <h4 className='text-lg font-bold'>Become one of our early checkers and get :</h4>
+                  </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>1 Year Free Access</span>
+                    <span>1 Year Free commission</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
@@ -86,11 +90,11 @@ const MainRegister = () => {
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>0% Commission Forever</span>
+                    <span>Top List Placement</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
-                    <span>Top List Placement</span>
+                    <span>Allowing extra earnings</span>
                   </div>
                 </div>
 
@@ -122,12 +126,12 @@ const MainRegister = () => {
         <HowItWorksSection/>
         
         <SuccessStorySection/>
-        <section className='bg-white mt-10 py-10 md:py-15  px-4'>
+        {/*<section className='bg-white mt-10 py-10 md:py-15  px-4'>
              <div className=' text-lg flex items-center justify-center p-8 md:p-10 '>
                 <h2 className=' text-gray-950/95 text-lg md:text-3xl font-bold text-center'>Frequently Asked Questions</h2>
              </div>
             <CheckerFaq/>
-        </section>
+        </section>*/}
       </div>
   )
 }

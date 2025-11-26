@@ -108,7 +108,7 @@ const CheckerRegistrationForm = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-md mx-auto">
-      <div className="h-2 bg-gradient-to-r from-blue-500 to-blue-600" />
+      <div className="h-2 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700" />
       
       <div className="p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Become a Checker</h2>
@@ -227,7 +227,7 @@ const CheckerRegistrationForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-green-600  hover:to-green-700 text-white font-medium rounded-lg hover:from-blue-600  transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>

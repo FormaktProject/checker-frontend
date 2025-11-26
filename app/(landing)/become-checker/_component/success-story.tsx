@@ -1,15 +1,23 @@
 "use client"
 
 import { ArrowRight, CheckCircle, Clock, DollarSign, Globe, Star, TrendingUp, Users } from "lucide-react"
+import Image from "next/image"
 import { useEffect, useState } from "react"
-
+const checker=  {
+      id: 4,
+      name: "David Thompson",
+      specialization: "Budget Accommodations",
+      image: "/img/checker/3.png",
+      verificationsCount: "1,567 verifications",
+      skills: ["Hostels", "Budget Hotels", "Value Assessment"]
+    }
 const SuccessStorySection = () => {
   const [activeWeek, setActiveWeek] = useState(0)
   const journeyTimeline = [
-    { week: "Week 1", earnings: "$150", checks: "8", label: "First Steps", description: "Joined as Early Checker, first local properties" },
-    { week: "Week 2", earnings: "$350", checks: "18", label: "Building Momentum", description: "Got first repeat clients and referrals" },
-    { week: "Week 3", earnings: "$580", checks: "28", label: "Growing Fast", description: "Expanded to nearby neighborhoods" },
-    { week: "Week 4", earnings: "$900", checks: "42", label: "First Month Success", description: "Built solid client base in local area" },
+    { week: "Week 1", earnings: "$150", checks: "3", label: "First Steps", description: "Joined as Early Checker, first local properties" },
+    { week: "Week 2", earnings: "$350", checks: "6", label: "Building Momentum", description: "Got first repeat clients and referrals" },
+    { week: "Week 3", earnings: "$580", checks: "11", label: "Growing Fast", description: "Expanded to nearby neighborhoods" },
+    { week: "Week 4", earnings: "$900", checks: "18", label: "First Month Success", description: "Built solid client base in local area" },
   ]
   const achievements = [
     { icon: DollarSign, value: "$900", label: "Monthly Income", color: "text-emerald-600" },
@@ -49,7 +57,7 @@ const SuccessStorySection = () => {
             From Zero to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">$900 in 4 Weeks</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            How John Smith became an <strong>Early Checker</strong> and built steady income with exclusive Checkerist benefits
+            How David Thompson became an <strong>Early Checker</strong> and built steady income with exclusive Checkerist benefits
           </p>
         </div>
 
@@ -60,30 +68,31 @@ const SuccessStorySection = () => {
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
                 <div className="relative">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                    JS
+                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                    <Image
+                     src={`${checker.image}`}
+                     alt={`${checker.name}`}
+                     sizes="100%"
+                     fill
+                     priority
+                     className=" rounded-full  object-cover"
+                    />
                   </div>
                   <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1">
                     <CheckCircle className="h-5 w-5 text-white" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">John Smith</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">{checker.name}</h3>
                   <p className="text-gray-600">Professional Accommodation Checker</p>
-                  <div className="flex items-center mt-2">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                    <span className="ml-2 text-sm text-gray-600">(5.0 Rating)</span>
-                  </div>
+                  <span className="text-green-600 text-base">Verified</span>
                 </div>
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 border-l-4 border-blue-500">
                 <p className="text-gray-700 leading-relaxed italic">
-                  I joined Checkerist as an Early Checker and couldn&apos;t believe the benefits - 1 year free, zero commission, and top list placement! In just 4 weeks, I earned $900 by checking properties in my neighborhood. The platform made it so easy to start, and clients keep coming back because I&apos;m featured as a recommended checker.
+                  I joined Checkerist as an Early Checker and couldn&apos;t believe the benefits.I found extra side money in travel services. 
+                  I earned $900 by checking properties in my neighborhood. The platform made it so easy to start, and clients keep coming back because I&apos;m featured as a recommended checker.
                 </p>
               </div>
 
@@ -92,11 +101,11 @@ const SuccessStorySection = () => {
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <div className="bg-yellow-100 rounded-full p-2 mr-3 mt-1">
-                      <Star className="h-4 w-4 text-yellow-600 fill-current" />
+                      <DollarSign className="h-4 w-4 text-yellow-600 fill-current" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">1 Year Free Access</p>
-                      <p className="text-sm text-gray-600">No platform fees for the entire first year - save hundreds monthly</p>
+                      <p className="font-medium text-gray-900">1 Year Free commission</p>
+                      <p className="text-sm text-gray-600">Keep 100% of your earnings - no hidden fees or commissions</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -104,8 +113,8 @@ const SuccessStorySection = () => {
                       <DollarSign className="h-4 w-4 text-green-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">0% Commission Forever</p>
-                      <p className="text-sm text-gray-600">Keep 100% of your earnings - no hidden fees or commissions</p>
+                      <p className="font-medium text-gray-900">Allowing extra earnings</p>
+                      <p className="text-sm text-gray-600">Unlock extra services. Unlock extra income.</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -179,11 +188,9 @@ const SuccessStorySection = () => {
               <span className="font-bold">Limited Early Checker Spots Available</span>
             </div>
             <h3 className="text-2xl md:text-4xl font-bold mb-4">
-              Become an Early Checker Like John
+              Become an Early Checker Like David
             </h3>
-            <p className="text-lg md:text-xl mb-6 text-white/95 max-w-2xl mx-auto">
-              Register now to get <strong>1 year free</strong>, <strong>0% commission forever</strong>, and be featured on our <strong>top list</strong> with exclusive benefits
-            </p>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
               <button
                 onClick={() => {
@@ -195,20 +202,7 @@ const SuccessStorySection = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </div>
-            <div className="flex flex-wrap gap-4 justify-center text-sm">
-              <div className="flex items-center text-white/95">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                <span>No experience needed</span>
-              </div>
-              <div className="flex items-center text-white/95">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                <span>Start earning this week</span>
-              </div>
-              <div className="flex items-center text-white/95">
-                <CheckCircle className="h-4 w-4 mr-2" />
-                <span>Full training provided</span>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

@@ -65,7 +65,6 @@ export async function registerChecker(data: {
 }
 export async function sendVerificationEmail(email: string, token: string) {
   const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
-
   // Create SMTP transporter using OVH credentials from environment
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -74,17 +73,14 @@ export async function sendVerificationEmail(email: string, token: string) {
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
-    },
-    // Optional: set a connection pool for many emails
-    // pool: true,
-  });
-
+    },});
   const html = `
     <div style="font-family: Arial, sans-serif; max-width:600px;margin:0 auto;">
       <h2 style="color:#111">Welcome to Checkerist</h2>
       <p>Verify your email by clicking the button below:</p>
       <a href="${verifyUrl}"
-         style="display:inline-block;background:#2563eb;color:#fff;padding:12px 20px;text-decoration:none;border-radius:8px;">
+         style="display:inline-block;background:#2563eb;color:#fff;padding:12px
+        20px;text-decoration:none;border-radius:8px;">
         Verify Email
       </a>
       <p style="font-size:13px;color:#666">Or paste this link in your browser:</p>
@@ -92,15 +88,12 @@ export async function sendVerificationEmail(email: string, token: string) {
       <p style="font-size:12px;color:#999">This link expires in 24 hours.</p>
     </div>
   `;
-
   try {
     const info = await transporter.sendMail({
       from: process.env.EMAIL_FROM || process.env.SMTP_USER,
       to: email,
       subject: "Verify your Checkerist account",
-      html,
-    });
-
+      html,});
     // optional: log messageId / response
     console.log("Email sent:", info.messageId ?? info.response);
     return { ok: true, info };
