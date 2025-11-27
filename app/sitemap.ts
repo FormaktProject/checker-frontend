@@ -14,9 +14,7 @@ function slugify(text: string): string {
 }
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.checkerist.com"; // Use real domain in production
-
   const urls: MetadataRoute.Sitemap = [];
-
   // Home page
   urls.push({
     url: `${baseUrl}/`,
@@ -38,7 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "daily",
     priority: 0.6,
   });
- 
 
   // Generate dynamic check/[country]/[city] pages
   for (const [country, cities] of Object.entries(data)) {
@@ -51,7 +48,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     for (const city of cities) {
       const citySlug = slugify(city);
-
       urls.push({
         url: `${baseUrl}/check/${countrySlug}/${citySlug}`,
         lastModified: new Date(),

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'http://loacalhost:3000'
+  const baseUrl = 'https://www.checkerist.com'
   
   return {
     rules: [
@@ -10,6 +10,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/api',
           '/admin',
+          '/checker',
+          '/user',
           '/dashboard',
           '/_next/',
           '/private',
