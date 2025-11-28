@@ -13,13 +13,13 @@ const MainHero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image 
-          alt="Checkerist" 
+          alt="Checkerist-hero-verification background" 
           src="/img/hero/bg.webp" 
           fill 
           sizes="100vw"
           priority
           className="object-cover object-center"
-          quality={90}
+          quality={85}
         />
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#020924e5] via-[#0510367e] to-[#2c396686]"></div>

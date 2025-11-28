@@ -62,6 +62,7 @@ export default function AboutUsSection() {
                 src="/img/aboutus/2.png"
                 alt="Happy travelers celebrating safe accommodation"
                 className="rounded-2xl w-full h-auto object-cover shadow-lg"
+                priority
               />
             </div>
           </div>

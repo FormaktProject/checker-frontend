@@ -64,7 +64,7 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
                    fill
                    sizes='864px'
                    className=' object-cover'
-                   alt='Checkerist'
+                   alt='Checkerist-header-mobile'
                    priority
                   />
                 </div>
@@ -127,7 +127,7 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
           Become Checker
         </Link>
         <Link
-          href="/others-pages/signup"
+          href="/sign-in"
           onClick={onClose}
           className="block w-full border border-gray-300 text-gray-900 text-center py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200"
         >

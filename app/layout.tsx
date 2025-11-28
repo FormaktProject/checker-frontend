@@ -6,13 +6,16 @@ import Script from "next/script";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap', // Add this
+  preload: true,    // Add this
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap', // Add this
+  preload: true,    // Add this
 });
-
 export const metadata: Metadata = {
   title: "CheckerIst | Verify Hotels & Restaurants Before You Travel",
   description: "Book with confidence! CheckerIst connects you with professional local checkers who physically verify hotels and restaurants before you book. No surprises—just safe, verified stays.",

@@ -42,7 +42,7 @@ const Header = () => {
                    fill
                    sizes='864px'
                    className=' object-cover'
-                   alt='Checkerist'
+                   alt='Checkerist-header'
                    priority
                   />
                 </div>
@@ -81,6 +81,7 @@ const Header = () => {
                   <User className="h-6 w-6" />
                 </Link>
                 <button
+                  name='menu-mobile'
                   className="text-white hover:text-gray-300 transition-colors duration-200"
                   onClick={() => setIsMobileMenuOpen(true)}
                 >
