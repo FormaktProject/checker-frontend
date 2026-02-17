@@ -658,7 +658,7 @@ export default function FindCheckerClient({
   return (
     <div className="min-h-screen bg-[#f7f6f8]">
       {/* Hero / Search */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-blue-50 pt-28 pb-12">
+      <section className="relative  bg-gradient-to-b z-50 from-white to-blue-50 pt-28 pb-12">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-indigo-100/50 blur-3xl" />
 
@@ -693,7 +693,7 @@ export default function FindCheckerClient({
       </section>
 
       {/* Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+       <main className="relative z-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <LoadingComponent />
         ) : searchResults.length > 0 ? (
