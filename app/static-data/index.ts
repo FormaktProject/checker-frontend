@@ -94,6 +94,7 @@ const data: MapGeoName = {
   "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata", "Tucumán"],
   "Thailand": ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Krabi", "Chiang Rai"],
   "Turkey": ["Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana"],
+  "Tunisia" : ["Djerba", "Tunis", "Sousse", "Monastir", "Hammamet"],
   "Indonesia": ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang", "Makassar"],
   "Pakistan": ["Karachi", "Lahore", "Islamabad", "Faisalabad", "Rawalpindi", "Multan"],
   "Kenya": ["Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret"],

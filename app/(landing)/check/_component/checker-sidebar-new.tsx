@@ -1,181 +1,240 @@
 "use client"
-import { useState } from "react"
-import type React from "react"
-
-import { MapPin, Search, Star } from "lucide-react"
+import { useState, useCallback } from "react"
 
 interface CheckerSidebarProps {
   onFilterChange?: (filters: any) => void
 }
 
-const CheckerSidebar = ({ onFilterChange }: CheckerSidebarProps) => {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedDeals, setSelectedDeals] = useState<string[]>([])
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState([0, 1000])
+const specialtyTags = ["WiFi Test", "Plumbing", "Roofing", "Electrical", "Security", "Mold Check", "HVAC", "Structural"]
+const propertyTypes = ["Residential", "Commercial", "Luxury Estates", "Industrial", "Vacation Rentals"]
+
+export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) {
+  const [priceMin, setPriceMin] = useState(0)
+  const [priceMax, setPriceMax] = useState(500)
   const [minRating, setMinRating] = useState(0)
+  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+  const [distance, setDistance] = useState(25)
 
-  const deals = ["Free cancellation", "Reserve now, pay at stay", "Properties with special offers"]
-
-  const popularFilters = ["Breakfast included", "Free WiFi", "Swimming pool", "Spa", "Fitness center", "Pet friendly"]
-
-  const amenities = ["Air conditioning", "Restaurant", "Room service", "Parking", "Business center", "Concierge"]
-
-  const handleDealChange = (deal: string) => {
-    setSelectedDeals((prev) => (prev.includes(deal) ? prev.filter((d) => d !== deal) : [...prev, deal]))
-  }
-
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilters((prev) => (prev.includes(filter) ? prev.filter((f) => f !== filter) : [...prev, filter]))
-  }
-
-  const notifyFilterChange = () => {
-    if (onFilterChange) {
+  const notify = useCallback(
+    (patch: object) => {
+      if (!onFilterChange) return
       onFilterChange({
-        priceMin: priceRange[0],
-        priceMax: priceRange[1],
+        priceMin,
+        priceMax,
         minRating,
+        ...patch,
       })
-    }
+    },
+    [onFilterChange, priceMin, priceMax, minRating]
+  )
+
+  const toggleSpecialty = (tag: string) => {
+    const next = selectedSpecialties.includes(tag)
+      ? selectedSpecialties.filter((s) => s !== tag)
+      : [...selectedSpecialties, tag]
+    setSelectedSpecialties(next)
+    notify({ specialties: next })
   }
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPrice = Number.parseInt(e.target.value)
-    setPriceRange([priceRange[0], newPrice])
-    setTimeout(notifyFilterChange, 100)
+  const toggleType = (type: string) => {
+    const next = selectedTypes.includes(type)
+      ? selectedTypes.filter((t) => t !== type)
+      : [...selectedTypes, type]
+    setSelectedTypes(next)
+    notify({ propertyTypes: next })
   }
 
-  const handleRatingChange = (rating: number) => {
-    setMinRating(rating)
-    setTimeout(notifyFilterChange, 100)
+  const handleReset = () => {
+    setPriceMin(0)
+    setPriceMax(500)
+    setMinRating(0)
+    setSelectedSpecialties([])
+    setSelectedTypes([])
+    setDistance(25)
+    if (onFilterChange)
+      onFilterChange({ priceMin: 0, priceMax: 500, minRating: 0, specialties: [], propertyTypes: [] })
   }
 
   return (
-    <div className="space-y-8">
-      {/* Map */}
-      <div className="bg-white rounded-lg p-4 shadow-sm">
-        <div className="bg-blue-100 rounded-lg h-48 flex items-center justify-center">
-          <div className="text-center">
-            <MapPin className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">Interactive Map</p>
-            <button className="text-blue-600 text-sm font-medium mt-1">Show on map</button>
+    <div className="flex flex-col gap-6">
+      {/* Header – only shown in the standalone sidebar, not inside the wrapper that already has the header */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Refine</span>
+        <button
+          onClick={handleReset}
+          className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          Reset All
+        </button>
+      </div>
+
+      {/* ── Price Range ── */}
+      <section>
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Price Range</p>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="relative flex-1">
+            <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">$</span>
+            <input
+              type="number"
+              min={0}
+              max={priceMax}
+              value={priceMin}
+              onChange={(e) => {
+                const v = Number(e.target.value)
+                setPriceMin(v)
+                notify({ priceMin: v })
+              }}
+              className="w-full rounded-xl border border-gray-100 bg-white py-2 pl-6 pr-2 text-sm font-medium text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
+          </div>
+          <span className="text-gray-400 text-sm">–</span>
+          <div className="relative flex-1">
+            <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">$</span>
+            <input
+              type="number"
+              min={priceMin}
+              max={9999}
+              value={priceMax}
+              onChange={(e) => {
+                const v = Number(e.target.value)
+                setPriceMax(v)
+                notify({ priceMax: v })
+              }}
+              className="w-full rounded-xl border border-gray-100 bg-white py-2 pl-6 pr-2 text-sm font-medium text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
           </div>
         </div>
-      </div>
-
-      {/* Search by property name */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Search by property name</h5>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="e.g. Best Western"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+        {/* dual thumb visual – simplified single thumb for max */}
+        <input
+          type="range"
+          min={0}
+          max={1000}
+          step={10}
+          value={priceMax}
+          onChange={(e) => {
+            const v = Number(e.target.value)
+            setPriceMax(v)
+            notify({ priceMax: v })
+          }}
+          className="w-full h-1.5 cursor-pointer appearance-none rounded-full bg-gray-200 accent-blue-600"
+        />
+        <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+          <span>$0</span>
+          <span>$1,000+</span>
         </div>
-      </div>
+      </section>
 
-      {/* Deals */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Deals</h5>
-        <div className="space-y-3">
-          {deals.map((deal) => (
-            <label key={deal} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedDeals.includes(deal)}
-                onChange={() => handleDealChange(deal)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="ml-3 text-sm text-gray-700">{deal}</span>
-            </label>
-          ))}
-        </div>
-      </div>
+      <div className="h-px bg-gray-100" />
 
-      {/* Popular Filters */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Popular Filters</h5>
-        <div className="space-y-3">
-          {popularFilters.map((filter) => (
-            <label key={filter} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedFilters.includes(filter)}
-                onChange={() => handleFilterChange(filter)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="ml-3 text-sm text-gray-700">{filter}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Price Range */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Nightly Price</h5>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <span>$0</span>
-            <span>$1000+</span>
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="1000"
-            value={priceRange[1]}
-            onChange={handlePriceChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-          />
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-900">
-              ${priceRange[0]} - ${priceRange[1]}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Star Rating */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Star Rating</h5>
-        <div className="grid grid-cols-2 gap-2">
-          {[0, 1, 2, 3, 4].map((rating) => (
+      {/* ── Min Rating ── */}
+      <section>
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Minimum Rating</p>
+        <div className="grid grid-cols-5 gap-1.5">
+          {[0, 1, 2, 3, 4, 5].map((r) => (
             <button
-              key={rating}
-              onClick={() => handleRatingChange(rating)}
-              className={`flex items-center justify-center py-2 px-3 border rounded-lg transition-colors duration-200 ${
-                minRating === rating
-                  ? "bg-blue-50 border-blue-500"
-                  : "border-gray-200 hover:border-blue-500 hover:bg-blue-50"
+              key={r}
+              onClick={() => {
+                setMinRating(r)
+                notify({ minRating: r })
+              }}
+              className={`flex flex-col items-center justify-center rounded-xl border py-2 text-xs font-bold transition-all ${
+                minRating === r
+                  ? "border-blue-500 bg-blue-50 text-blue-700"
+                  : "border-gray-100 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50"
               }`}
             >
-              <div className="flex items-center">
-                {[...Array(rating + 1)].map((_, i) => (
-                  <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
-                ))}
-              </div>
+              {r === 0 ? (
+                <span className="text-[10px] font-semibold">Any</span>
+              ) : (
+                <>
+                  <span>{r}.0</span>
+                  <span className="text-yellow-400">{"★".repeat(r)}</span>
+                </>
+              )}
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Amenities */}
-      <div className="bg-white rounded-lg p-6 shadow-sm">
-        <h5 className="text-lg font-medium text-gray-900 mb-4">Amenities</h5>
-        <div className="space-y-3">
-          {amenities.map((amenity) => (
-            <label key={amenity} className="flex items-center">
-              <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-              <span className="ml-3 text-sm text-gray-700">{amenity}</span>
-            </label>
-          ))}
+      <div className="h-px bg-gray-100" />
+
+      {/* ── Property Type ── */}
+      <section>
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Property Type</p>
+        <div className="space-y-2.5">
+          {propertyTypes.map((type) => {
+            const checked = selectedTypes.includes(type)
+            return (
+              <label key={type} className="group flex cursor-pointer items-center gap-3">
+                <div
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-colors ${
+                    checked ? "border-blue-600 bg-blue-600" : "border-gray-300 bg-white group-hover:border-blue-400"
+                  }`}
+                  onClick={() => toggleType(type)}
+                >
+                  {checked && (
+                    <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor">
+                      <path d="M10 3L5 8.5 2 5.5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+                <input type="checkbox" checked={checked} onChange={() => toggleType(type)} className="sr-only" />
+                <span className={`text-sm font-medium transition-colors ${checked ? "text-blue-700" : "text-gray-700 group-hover:text-blue-600"}`}>
+                  {type}
+                </span>
+              </label>
+            )
+          })}
         </div>
-      </div>
+      </section>
+
+      <div className="h-px bg-gray-100" />
+
+      {/* ── Specialties ── */}
+      <section>
+        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Specialties</p>
+        <div className="flex flex-wrap gap-2">
+          {specialtyTags.map((tag) => {
+            const active = selectedSpecialties.includes(tag)
+            return (
+              <button
+                key={tag}
+                onClick={() => toggleSpecialty(tag)}
+                className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+                  active
+                    ? "border-blue-200 bg-blue-600 text-white shadow-sm shadow-blue-500/20"
+                    : "border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
+                }`}
+              >
+                {tag}
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
+      <div className="h-px bg-gray-100" />
+
+      {/* ── Distance ── */}
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Distance</p>
+          <span className="text-xs font-semibold text-blue-600">Within {distance} km</span>
+        </div>
+        <input
+          type="range"
+          min={1}
+          max={100}
+          value={distance}
+          onChange={(e) => setDistance(Number(e.target.value))}
+          className="w-full h-1.5 cursor-pointer appearance-none rounded-full bg-gray-200 accent-blue-600"
+        />
+        <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+          <span>1 km</span>
+          <span>100 km</span>
+        </div>
+      </section>
     </div>
   )
 }
-
-export default CheckerSidebar

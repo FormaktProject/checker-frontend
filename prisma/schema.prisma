@@ -187,20 +187,16 @@ model CheckerService {
   id          String         @id @default(cuid())
   checkerId   String
   checker     CheckerProfile @relation(fields: [checkerId], references: [id], onDelete: Cascade)
-  
   name        String
   description String
   price       Decimal
   duration    Int // in minutes
   isActive    Boolean        @default(true)
-  
   // Service details
   includes    String[] // What's included in the service
   requirements String[] // Requirements from client
-  
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
-  
   // Relations
   bookings    Booking[]
   
@@ -309,7 +305,6 @@ enum PaymentStatus {
 model Booking {
   id                String         @id @default(cuid())
   bookingNumber     String         @unique // Human-readable booking number
-  
   // Parties
   userId            String
   user              User           @relation(fields: [userId], references: [id])
@@ -317,7 +312,6 @@ model Booking {
   checker           CheckerProfile @relation(fields: [checkerId], references: [id])
   serviceId         String?
   service           CheckerService? @relation(fields: [serviceId], references: [id])
-  
   // Booking Details
   status            BookingStatus  @default(PENDING)
   scheduledDate     DateTime
@@ -325,43 +319,35 @@ model Booking {
   duration          Int // in minutes
   location          String
   coordinates       Json? // {lat: number, lng: number}
-  
   // Pricing
   basePrice         Decimal
   additionalFees    Json? // {name: string, amount: number}[]
   discountAmount    Decimal        @default(0)
   totalAmount       Decimal
   currency          String         @default("USD")
-  
   // Platform fees
   platformFee       Decimal
   checkerEarnings   Decimal
-  
   // Service Details
   serviceTitle      String
   serviceDescription String
   specialRequests   String?
-  
   // Status tracking
   confirmedAt       DateTime?
   startedAt         DateTime?
   completedAt       DateTime?
   cancelledAt       DateTime?
   cancellationReason String?
-  
   // Communication
   notes             String?
   internalNotes     String? // Admin notes
-  
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  
   // Relations
   payments          Payment[]
   reviews           Review[]
   disputes          Dispute[]
   messages          Message[]
-  
   @@map("bookings")
 }
 

@@ -2,8 +2,9 @@ import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 //import FindCheckerClient from '../_component/find-checker-cleint';
 import { getOriginalName } from '@/hook/correct-rul';
-import FindCheckerClient from '../_component/find-checker-client-new';
+//import FindCheckerClient from '../_component/find-checker-client-new';
 import { getSession } from '@/auth';
+import FindCheckerClient from '../_component/checker-client-main';
 
 interface PageProps {
   params: Promise<{
