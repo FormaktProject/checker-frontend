@@ -39,7 +39,7 @@ const HomePage = async() => {
       <FeaturesSection/>
       <AboutUsSection/>
       <ContactForm/>
-      <Footer />
+      
     </div>
   )
 }

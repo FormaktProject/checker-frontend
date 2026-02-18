@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./_component/header";
+import Footer from "./_component/footer";
 
 
 export default function PublicLayout({children}:{children:React.ReactNode}){
@@ -9,7 +10,8 @@ export default function PublicLayout({children}:{children:React.ReactNode}){
             <Header/>
             <div className=" h-screen">
                 {children}
-            </div>
+                <Footer />
+            </div>    
         </div>
     )
 }
