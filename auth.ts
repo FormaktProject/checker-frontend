@@ -50,7 +50,8 @@ export async function verifyEmail(token: string): Promise<{ success?: boolean; e
         verificationToken: null,
       },
     })
-
+    // here i need to send email of welcoming to the user
+    
     return { success: true }
   } catch (error) {
     return { error: "Verification failed" }

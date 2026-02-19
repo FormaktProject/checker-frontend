@@ -10,7 +10,7 @@ export default function PublicLayout({children}:{children:React.ReactNode}){
             <Header/>
             <div className=" h-screen">
                 {children}
-                <Footer />
+                
             </div>    
         </div>
     )
