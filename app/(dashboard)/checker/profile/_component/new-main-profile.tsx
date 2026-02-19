@@ -363,7 +363,7 @@ export default function CheckerProfileCompletionPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Short Bio</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Bio (Important)</label>
                 <textarea
                   value={formData.description}
                   onChange={e => { setFormData(prev => ({ ...prev, description: e.target.value })); setHasChanges(true) }}
