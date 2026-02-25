@@ -335,6 +335,7 @@ function CheckerCard({ checker }: { checker: Checker }) {
         <button className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors" title="Chat"><IcoChat /></button>
         <button className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Email"><IcoMail /></button>
         <button
+        onClick={HandelClick}
         className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-all" title="View Profile"><IcoEye /></button>
       </div>
     </div>

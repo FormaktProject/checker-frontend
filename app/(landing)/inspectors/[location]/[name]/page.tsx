@@ -8,7 +8,7 @@ import { AboutSection } from "./_components/Aboutsection";
 import { PricingCoverage } from "./_components/pricing-covrage";
 import { ReviewsSection } from "./_components/review-section";
 import { MobileCTA } from "./_components/mobilecta";
-import { slugify, unslugify } from "./_components/types-checker";
+import { CheckerProfile, slugify, unslugify } from "./_components/types-checker";
 import { SpecialtiesSection } from "./_components/specialites-section";
 
 interface PageProps {
@@ -20,7 +20,31 @@ interface PageProps {
     id?: string;      // "clx1234abc"
   };
 }
+function generateCheckerSEO(checker: CheckerProfile, locationLabel: string) {
+  const fullName = `${checker.user.firstName} ${checker.user.lastName}`;
+    // Extract sub-categories from specialties
+  const subCategories: string[] = [];
+  if (checker.specialties && checker.specialties.length > 0) {
+    checker.specialties.forEach((specialty: any) => {
+      if (specialty.subcategory && specialty.subcategory.length > 0) {
+        const subs = specialty.subcategory.split("||").map((s: string) => s.trim()).filter(Boolean);
+        subCategories.push(...subs);
+      }
+    });
+  }
+  const defaultSubCategories = [
+    "Accommodation & Rentals",
+  ];
+  const activeSubs = subCategories.length > 0 ? subCategories : defaultSubCategories;
+  // Title: max ~60 chars — location + role + brand
+  const title = `${fullName} – ${checker.professionalTitle} in ${locationLabel} | Checkerist`;
 
+  // Description: ~155 chars — include location + sub-categories
+  const subsText = activeSubs.join(", ");
+  const description = `Hire ${fullName}, a ${checker.professionalTitle} in ${locationLabel}. Specializing in ${subsText}. Book a check before you pay — avoid scams & bad surprises on Checkerist.`;
+
+  return { fullName, title, description, subCategories: activeSubs };
+}
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { id } = await searchParams
   const { location, name } = await params;
@@ -30,11 +54,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const nameSlug     = slugify(decodeURIComponent(name));
     // Human-readable version for display in content, breadcrumbs, SEO titles
   const locationLabel = unslugify(locationSlug);
-  const fullName = `${checker.user.firstName} ${checker.user.lastName}`;
-  const Location = ` ${locationLabel}`;
-  const title = `${fullName} — ${checker.professionalTitle} in ${Location} | Verify Rentals | Checkerist`;
-  const description = `Book ${fullName}, a verified accommodation inspector in ${Location}. He checks apartments, hotels, and rentals before booking to prevent scams and bad surprises. Secure booking on Checkerist.`;
-
+  const { fullName, title, description, subCategories } = generateCheckerSEO(checker, locationLabel);
+  const Location = `${locationLabel}`;
   return {
     title,
     description,
@@ -69,10 +90,8 @@ export default async function CheckerProfilePage({ params, searchParams }: PageP
   const nameSlug     = slugify(decodeURIComponent(name));
     // Human-readable version for display in content, breadcrumbs, SEO titles
   const locationLabel = unslugify(locationSlug);
-  const fullName = `${checker.user.firstName} ${checker.user.lastName}`;
+  const { fullName, title, description, subCategories } = generateCheckerSEO(checker, locationLabel);
   const Location = ` ${locationLabel}`;
-  const title = `${fullName} — ${checker.professionalTitle} in ${Location} | Verify Rentals | Checkerist`;
-  const description = `Book ${fullName}, a verified accommodation inspector in ${Location}. He checks apartments, hotels, and rentals before booking to prevent scams and bad surprises. Secure booking on Checkerist.`;
   // JSON-LD Structured Data for rich snippets
   const jsonLd = {
     "@context": "https://schema.org",
@@ -140,8 +159,8 @@ export default async function CheckerProfilePage({ params, searchParams }: PageP
             <div className="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
               {/*<StatsDashboard checker={checker} />*/}
               <div className="flex flex-col gap-2">
-                <h1 className=" text-2xl md:text-3xl text-gray-600 font-bold px-1 py-2"> {title}</h1>
-                <AboutSection checker={checker} />
+                <h1 className=" text-2xl md:text-3xl text-gray-600 font-bold px-1 py-2"> {fullName} — {subCategories.join(' - ')}</h1>
+                <AboutSection checker={checker} location={locationLabel}/>
               </div>
               <SpecialtiesSection specialties={checker.specialties} />
               <PricingCoverage checker={checker} />

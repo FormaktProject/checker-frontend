@@ -37,7 +37,6 @@ const MainHero = () => {
                 <p className="text-sm text-white/90 sm:text-sm md:text-base mb-12 max-w-2xl mx-auto leading-relaxed">
                   Worried your Airbnb or rental might be a scam?
                   CheckerIst connects you with trusted local inspectors who physically verify accommodations before you book — so you travel with confidence.
-
                 </p>
               </div>
               

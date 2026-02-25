@@ -54,7 +54,6 @@ const travelCategories = {
 
   "Accommodation & Rentals": [
     "Hotels",
-    "Airbnb",
     "Hostels",
     "Resorts",
     "All-inclusive",

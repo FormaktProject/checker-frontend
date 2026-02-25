@@ -4,15 +4,16 @@ import { CheckerProfile, LANGUAGE_LEVEL, LANGUAGE_MAP } from "./types-checker";
 
 interface AboutSectionProps {
   checker: CheckerProfile;
+  location:string
 }
 
-export function AboutSection({ checker }: AboutSectionProps) {
+export function AboutSection({ checker, location }: AboutSectionProps) {
   const paragraphs = checker.description.split("\n\n").filter(Boolean);
   const firstName = checker.user.firstName;
 
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8">
-      <h2 className="text-xl font-bold text-slate-900 mb-4">About {firstName}</h2>
+      <h2 className="text-xl font-bold text-slate-900 mb-4">About {firstName} - {checker.professionalTitle} in {location}</h2>
 
       <div className="text-slate-600 leading-relaxed space-y-4 mb-8">
         {paragraphs.map((p, i) => (
