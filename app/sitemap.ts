@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import data from './static-data';
 import prisma from '@/lib/db';
+import { blogPosts } from './(landing)/blog/[slug]/_components/blogpost';
 // adjust path if needed
 function slugify(text: string): string {
   return text
@@ -112,6 +113,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Failed to fetch checkers for sitemap:", error);
     // Fail gracefully — sitemap still returns static URLs
   } 
+  for (const post of blogPosts) {
+    urls.push({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    });
+}
 
   return urls;
 }

@@ -265,10 +265,10 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
             </ShareBtn>
           </div>
 
-          {/* Lead paragraph */}
+          {/* Lead paragraph 
           <p className="text-xl md:text-2xl font-body leading-relaxed text-slate-700 mb-8">
             {post.excerpt}
-          </p>
+          </p>*/}
 
           {/* Dynamic content blocks */}
           <div className="max-w-none">

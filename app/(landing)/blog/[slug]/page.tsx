@@ -28,7 +28,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.title} | CheckerIst Blog`,
+    title: `${post.title} `,
     description: post.excerpt,
     openGraph: {
       title: post.title,
