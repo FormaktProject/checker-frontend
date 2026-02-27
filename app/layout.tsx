@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
-
 import { Inter } from 'next/font/google';
-
 // ✅ Optimize font loading
 const inter = Inter({ 
   subsets: ['latin'],
@@ -13,8 +10,10 @@ const inter = Inter({
   variable: '--font-inter',
 });
 export const metadata: Metadata = {
-  title: "Is Airbnb Legit? Verified Rentals by Local Experts | CheckerIst",
-  description: "Avoid rental scams! Get your Airbnb or vacation rental verified by local experts before you book. Safe, secure, and trusted by travelers worldwide.",
+  title: "Verify Accommodation & Travel Bookings Before You Arrive | CheckerIst",
+  // ── Meta description — natural, action-driven, ≤160 chars, includes top keywords
+  description:
+    "CheckerIst sends local experts to inspect your hotel, Airbnb, or rental before you travel. Secure your booking, verify real room photos, and make every flight & trip 100% worth it.",
   icons:{
     icon: [
       {
