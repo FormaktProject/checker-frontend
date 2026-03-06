@@ -74,7 +74,7 @@ const Header = () => {
               <div className="hidden md:flex items-center gap-3">
                 <Link
                   href="/become-checker"
-                  className="bg-[#2cc2a5] hover:bg-[#1f8a75] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-sm shadow-[#2cc2a5]/30"
+                  className="bg-[#16977d] hover:bg-[#186757] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-sm shadow-[#2cc2a5]/30"
                 >
                   Become Early Checker
                 </Link>

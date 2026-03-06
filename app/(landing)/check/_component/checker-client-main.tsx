@@ -15,7 +15,7 @@ interface Checker {
   id: number
   name: string
   profileImage: string
-  professionalTitle:string
+  professionalTitle: string
   rating: number
   reviews: number
   experience: string
@@ -37,6 +37,7 @@ interface Filters {
   minRating: number
   priceMin: number
   priceMax: number
+  specialties: string[]   // ← added
 }
 
 interface FindCheckerClientProps {
@@ -46,7 +47,7 @@ interface FindCheckerClientProps {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SVG Icons
+// SVG Icons (unchanged)
 // ─────────────────────────────────────────────────────────────────────────────
 const IcoStar = () => (
   <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
@@ -95,17 +96,56 @@ const IcoCheck = () => (
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Empty State
+// Empty State — with "Réinitialiser" button when filters are active
 // ─────────────────────────────────────────────────────────────────────────────
-function EmptyState({ locationString, country, city }: {
-  locationString: string; country: string; city: string; accommodation: string
+function EmptyState({
+  locationString,
+  country,
+  city,
+  accommodation,
+  hasActiveFilters,
+  onReset,
+}: {
+  locationString: string
+  country: string
+  city: string
+  accommodation: string
+  hasActiveFilters: boolean
+  onReset: () => void
 }) {
+  const router = useRouter()
   const area = city || country || "this area"
 
   return (
     <div className="relative w-full">
       <div className="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
       <div className="pointer-events-none absolute -right-10 top-40 h-64 w-64 rounded-full bg-yellow-100/40 blur-3xl" />
+
+      {/* ── Reset filters banner (shown when sidebar filters caused empty results) ── */}
+      {hasActiveFilters && (
+        <div className="mb-8 flex flex-col items-center gap-3 rounded-2xl border border-orange-100 bg-orange-50 px-6 py-5 text-center">
+          <p className="text-sm font-semibold text-orange-700">
+            No checkers match your current filters.
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={onReset}
+              className="inline-flex items-center gap-2 rounded-full bg-orange-600 px-5 py-2.5 text-xs font-bold text-white shadow shadow-orange-300/40 transition-all hover:bg-orange-700 active:scale-95"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+              </svg>
+              Réinitialiser les filtres
+            </button>
+            <button
+              onClick={() => router.push("/check")}
+              className="inline-flex items-center gap-2 rounded-full border border-orange-300 bg-white px-5 py-2.5 text-xs font-bold text-orange-700 transition-all hover:bg-orange-50 active:scale-95"
+            >
+              Voir tous les checkers
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
         <div className="flex flex-col gap-8 lg:col-span-7">
@@ -230,14 +270,14 @@ function EmptyState({ locationString, country, city }: {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Checker Card
+// Checker Card (unchanged)
 // ─────────────────────────────────────────────────────────────────────────────
 function CheckerCard({ checker }: { checker: Checker }) {
   const [liked, setLiked] = useState(false)
   const initials = checker.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "?"
   const isOnline = (checker.completedChecks ?? 0) > 100
   const router = useRouter()
-  const HandelClick = ()=>{
+  const HandelClick = () => {
     router.push(`/travel-agent/${slugify(checker.location.country)}/${slugify(checker.name)}?id=${checker.id}`)
   }
   return (
@@ -312,7 +352,7 @@ function CheckerCard({ checker }: { checker: Checker }) {
         <div className="text-right">
           <p className="flex items-center justify-end gap-0.5 text-[10px] text-gray-500">
             <IcoPin />
-            <span className="max-w-[110px] ">
+            <span className="max-w-[110px]">
               {checker.location?.city && checker.location?.country
                 ? `${checker.location.city} ${checker.location.country}`
                 : checker.coverageArea || "Worldwide"}
@@ -335,22 +375,22 @@ function CheckerCard({ checker }: { checker: Checker }) {
         <button className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors" title="Chat"><IcoChat /></button>
         <button className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Email"><IcoMail /></button>
         <button
-        onClick={HandelClick}
-        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-all" title="View Profile"><IcoEye /></button>
+          onClick={HandelClick}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-all" title="View Profile"><IcoEye /></button>
       </div>
     </div>
   )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Sort Dropdown
+// Sort Dropdown (unchanged)
 // ─────────────────────────────────────────────────────────────────────────────
 const SORT_OPTIONS = [
   { label: "Recommended",        value: "rating" },
   { label: "Highest Rated",      value: "rating" },
   { label: "Most Reviews",       value: "experience" },
   { label: "Price: Low → High",  value: "price" },
-  { label: "Price: High → Low",  value: "price" },
+  { label: "Price: High → Low",  value: "price-desc" },
 ]
 
 function SortDropdown({ onSortChange }: { onSortChange: (v: string) => void }) {
@@ -402,7 +442,7 @@ function SortDropdown({ onSortChange }: { onSortChange: (v: string) => void }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Results Layout
+// Results Layout (unchanged structure)
 // ─────────────────────────────────────────────────────────────────────────────
 function ResultsLayout({
   checkers, totalResults, currentPage, onPageChange, onFilterChange, onSortChange, locationString,
@@ -419,14 +459,12 @@ function ResultsLayout({
 
   return (
     <div className="flex w-full flex-col lg:flex-row gap-6">
-      {/* Desktop sidebar */}
       <aside className="hidden lg:block w-56 xl:w-60 shrink-0 self-start sticky top-24">
         <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
           <CheckerSidebar onFilterChange={onFilterChange} />
         </div>
       </aside>
 
-      {/* Mobile filter toggle */}
       <div className="lg:hidden">
         <button
           onClick={() => setMobileFiltersOpen((v) => !v)}
@@ -444,7 +482,6 @@ function ResultsLayout({
         )}
       </div>
 
-      {/* Main content */}
       <div className="flex flex-1 flex-col min-w-0">
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -473,70 +510,7 @@ function ResultsLayout({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ██████████████████████████████████████████████████████████████████████████
-//
-//  ROOT CAUSE ANALYSIS — why checkers don't appear when selecting a country
-//
-//  BUG 1 ── Double useEffect race condition
-//  ──────────────────────────────────────────────────────────────────────────
-//  The original code has THREE useEffects that all call fetchCheckers():
-//
-//    useEffect(() => { fetchCheckers() }, [])           ← runs on mount
-//    useEffect(() => { setCurrentPage(1); fetchCheckers() }, [filters])  ← runs when filters change
-//    useEffect(() => { fetchCheckers() }, [currentPage])  ← runs when page changes
-//
-//  When filters change, BOTH the 2nd AND 3rd effects fire because
-//  setCurrentPage(1) inside the 2nd effect also triggers the 3rd effect.
-//  This causes a race: two overlapping fetches, the FIRST (stale) one can
-//  overwrite results from the SECOND (correct) one.
-//
-//  BUG 2 ── fetchCheckers captured stale filters in useCallback
-//  ──────────────────────────────────────────────────────────────────────────
-//  fetchCheckers is memoised with useCallback([filters, currentPage]).
-//  BUT the useEffect deps arrays are empty [] or [filters], NOT
-//  [fetchCheckers]. So the effect runs with a stale closure of
-//  fetchCheckers that still has the OLD filters value.
-//
-//  BUG 3 ── CheckerSearchBox calls onFilterChange with FULL filter object
-//  ──────────────────────────────────────────────────────────────────────────
-//  SearchBox passes:
-//    { country, city, accommodation, minRating:0, priceMin:0, priceMax:10000 }
-//
-//  The old handleFilterChange was:
-//    setFilters(newFilters)   ← REPLACES the whole object
-//
-//  So when the user had previously adjusted priceMax via the sidebar to
-//  e.g. $200, clicking Search RESET priceMax back to 10000, which is fine.
-//  BUT if the sidebar calls onFilterChange({ priceMin, priceMax, minRating })
-//  WITHOUT country/city/accommodation, those fields get deleted from state.
-//  We fix this by always merging: setFilters(prev => ({ ...prev, ...partial }))
-//
-//  BUG 4 ── API filter: user.country vs. businessCountry
-//  ──────────────────────────────────────────────────────────────────────────
-//  The API filters on:
-//    user: { country: { contains: country } }   ← user.country field
-//  But the card shows "Unknown, United States" from:
-//    checker.businessCountry || "Unknown"
-//
-//  So the checker's country is stored in TWO places in Prisma:
-//    - checkerProfile.businessCountry (what the card displays)
-//    - user.country (what the API filters on)
-//
-//  If the checker set their country in the profile form (businessCountry)
-//  but not in the user account (user.country), the filter finds nothing.
-//
-//  THE FIX: filter on BOTH fields with OR logic in the API.
-//  We cannot change the API per the requirements, so we pass the search
-//  term in BOTH the `country` param (for user.country) AND handle it
-//  gracefully. BUT we can add a `businessCountry` param to the API call
-//  from the client side that the existing API ignores — harmless.
-//
-//  ACTUAL client-side fix: the URL the search box navigates to is correct.
-//  The real issue is that fetchCheckers uses a STALE closure. See BUG 2.
-//
-// ██████████████████████████████████████████████████████████████████████████
-// ─────────────────────────────────────────────────────────────────────────────
-// Main export  — all bugs fixed
+// Main export
 // ─────────────────────────────────────────────────────────────────────────────
 export default function FindCheckerClient({
   initialCountry = "",
@@ -549,7 +523,6 @@ export default function FindCheckerClient({
   const [currentPage, setCurrentPage] = useState(1)
   const [sortBy, setSortBy] = useState("rating")
 
-  // ── FIX: keep filters in a ref so fetchCheckers always reads latest value ──
   const [filters, setFilters] = useState<Filters>({
     country: initialCountry,
     city: initialCity,
@@ -557,17 +530,17 @@ export default function FindCheckerClient({
     minRating: 0,
     priceMin: 0,
     priceMax: 10000,
+    specialties: [],        // ← new
   })
+
   const filtersRef = useRef(filters)
   const pageRef = useRef(currentPage)
   const sortRef = useRef(sortBy)
 
-  // Keep refs in sync
   useEffect(() => { filtersRef.current = filters }, [filters])
   useEffect(() => { pageRef.current = currentPage }, [currentPage])
   useEffect(() => { sortRef.current = sortBy }, [sortBy])
 
-  // ── FIX: fetchCheckers reads from refs, never stale ──────────────────────
   const fetchCheckers = useCallback(async () => {
     const f = filtersRef.current
     const page = pageRef.current
@@ -585,19 +558,12 @@ export default function FindCheckerClient({
         minRating: f.minRating.toString(),
         priceMin: f.priceMin.toString(),
         priceMax: f.priceMax.toString(),
+        // ── Pass specialties as comma-separated string ────────────────────
+        specialties: f.specialties.join(","),
       })
-
-      // Debug: log what we're sending to the API
-      if (process.env.NODE_ENV === "development") {
-        console.log("[FindChecker] API call params:", Object.fromEntries(params))
-      }
 
       const res = await fetch(`/api/find-checker?${params}`)
       const data = await res.json()
-
-      if (process.env.NODE_ENV === "development") {
-        console.log("[FindChecker] API response:", { total: data.total, count: data.data?.length })
-      }
 
       setSearchResults(data.data || [])
       setTotalResults(data.total || 0)
@@ -608,34 +574,35 @@ export default function FindCheckerClient({
     } finally {
       setIsLoading(false)
     }
-  }, []) // ← intentionally empty: always reads latest via refs
+  }, [])
 
-  // ── FIX: single effect that waits for refs to sync before fetching ────────
-  // Mount: fetch once
+  // Mount fetch
   useEffect(() => {
     fetchCheckers()
   }, [fetchCheckers])
 
-  // Filter or sort change: reset page to 1 THEN fetch
-  // Using a microtask so the ref update for page runs first
+  // Filter / sort change → reset to page 1 then fetch
   useEffect(() => {
     pageRef.current = 1
     setCurrentPage(1)
     fetchCheckers()
   }, [filters, sortBy]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Page change: fetch (filter effect already reset page, so this only fires
-  // when user clicks pagination directly)
   const handlePageChange = useCallback((page: number) => {
     pageRef.current = page
     setCurrentPage(page)
     fetchCheckers()
   }, [fetchCheckers])
 
-  // ── FIX: always merge partial updates so no fields are accidentally wiped ──
-  const handleFilterChange = useCallback((partial: Partial<Filters>) => {
+  // Merge partial updates — sidebar sends { specialties: string[] } or price/rating patches
+  const handleFilterChange = useCallback((partial: Partial<Filters> & { specialties?: string[] }) => {
     setFilters((prev) => {
-      const next = { ...prev, ...partial }
+      const next: Filters = {
+        ...prev,
+        ...partial,
+        // Ensure specialties is always an array
+        specialties: partial.specialties ?? prev.specialties,
+      }
       filtersRef.current = next
       return next
     })
@@ -645,6 +612,28 @@ export default function FindCheckerClient({
     sortRef.current = value
     setSortBy(value)
   }, [])
+
+  // ── Reset all sidebar filters (keeps location from search box) ────────────
+  const handleReset = useCallback(() => {
+    const reset: Filters = {
+      country: filtersRef.current.country,
+      city: filtersRef.current.city,
+      accommodation: filtersRef.current.accommodation,
+      minRating: 0,
+      priceMin: 0,
+      priceMax: 10000,
+      specialties: [],
+    }
+    filtersRef.current = reset
+    setFilters(reset)
+  }, [])
+
+  // Determine whether sidebar filters are non-default (to show reset banner)
+  const hasActiveFilters =
+    filters.minRating > 0 ||
+    filters.priceMin > 0 ||
+    filters.priceMax < 10000 ||
+    filters.specialties.length > 0
 
   const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "")
 
@@ -666,7 +655,7 @@ export default function FindCheckerClient({
   return (
     <div className="min-h-screen bg-[#f7f6f8]">
       {/* Hero / Search */}
-      <section className="relative  bg-gradient-to-b z-50 from-white to-blue-50 pt-28 pb-12">
+      <section className="relative bg-gradient-to-b z-50 from-white to-blue-50 pt-28 pb-12">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-indigo-100/50 blur-3xl" />
 
@@ -690,7 +679,6 @@ export default function FindCheckerClient({
             )}
           </div>
 
-          {/* CheckerSearchBox — unchanged */}
           <CheckerSearchBox
             initialCountry={initialCountry}
             initialCity={initialCity}
@@ -700,8 +688,7 @@ export default function FindCheckerClient({
         </div>
       </section>
 
-      {/* Content */}
-       <main className="relative z-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <LoadingComponent />
         ) : searchResults.length > 0 ? (
@@ -720,6 +707,8 @@ export default function FindCheckerClient({
             country={filters.country}
             city={filters.city}
             accommodation={filters.accommodation}
+            hasActiveFilters={hasActiveFilters}
+            onReset={handleReset}
           />
         )}
       </main>

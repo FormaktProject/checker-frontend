@@ -5,6 +5,28 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
 
+    // ── Detect if this is a request for the specialties list ──────────────────
+    if (searchParams.get("type") === "specialties") {
+      const specialties = await prisma.checkerSpecialty.findMany({
+        select: { category: true },
+        where: {
+          checker: {
+            status: "APPROVED",
+            isAvailable: true,
+          },
+        },
+        distinct: ["category"],
+        orderBy: { category: "asc" },
+      })
+
+      const unique = Array.from(
+        new Set(specialties.map((s) => s.category.trim()).filter(Boolean))
+      )
+
+      return NextResponse.json({ data: unique })
+    }
+
+    // ── Main checker search ───────────────────────────────────────────────────
     const country       = searchParams.get("country")       || ""
     const city          = searchParams.get("city")          || ""
     const accommodation = searchParams.get("accommodation") || ""
@@ -15,51 +37,95 @@ export async function GET(request: NextRequest) {
     const priceMin      = Number.parseFloat(searchParams.get("priceMin")  || "0")
     const priceMax      = Number.parseFloat(searchParams.get("priceMax")  || "10000")
 
+    // Comma-separated list of selected specialty categories e.g. "WiFi Test,Plumbing"
+    const specialtiesParam = searchParams.get("specialties") || ""
+    const selectedSpecialties = specialtiesParam
+      ? specialtiesParam.split(",").map((s) => s.trim()).filter(Boolean)
+      : []
+
     const skip = (page - 1) * limit
 
+    // ── Build WHERE clause ────────────────────────────────────────────────────
     const where: any = {
+      status: "APPROVED",          // only show approved checkers
       basePrice:     { gte: priceMin, lte: priceMax },
       averageRating: { gte: minRating },
     }
 
+    // Country: match businessCountry OR user.country
     if (country) {
-      // Match against EITHER the profile businessCountry OR the user-level country
       where.OR = [
         { businessCountry: { contains: country, mode: "insensitive" } },
         { user: { country: { contains: country, mode: "insensitive" } } },
       ]
     }
 
+    // Build AND array for additional must-all conditions
+    const andConditions: any[] = []
+
+    // City: match businessCity OR coverageAreas element
     if (city) {
-      // ✅ FIX: also search coverageAreas array when businessCity doesn't match.
-      // Checkers may have a city saved only in coverageAreas and not businessCity.
-      where.AND = [
-        ...(where.AND || []),
-        {
-          OR: [
-            { businessCity: { contains: city, mode: "insensitive" } },
-            { coverageAreas: { has: city } },
-          ]
-        }
-      ]
+      andConditions.push({
+        OR: [
+          { businessCity: { contains: city, mode: "insensitive" } },
+          { coverageAreas: { has: city } },
+        ],
+      })
     }
 
+    // Accommodation type from search box (single value)
     if (accommodation) {
-      where.specialties = {
-        some: {
-          category: { contains: accommodation, mode: "insensitive" },
+      andConditions.push({
+        specialties: {
+          some: {
+            category: { contains: accommodation, mode: "insensitive" },
+          },
+        },
+      })
+    }
+
+    // Sidebar specialties (multi-select): checker must have AT LEAST ONE match
+    if (selectedSpecialties.length > 0) {
+      andConditions.push({
+        specialties: {
+          some: {
+            category: {
+              in: selectedSpecialties,
+              // Prisma does not support mode on `in`, so we use a workaround:
+              // fetch case-insensitively via OR across the selected values
+            },
+          },
+        },
+      })
+
+      // ↑ Prisma `in` IS case-sensitive on PostgreSQL.
+      // Replace the above with a proper case-insensitive OR:
+      andConditions[andConditions.length - 1] = {
+        specialties: {
+          some: {
+            OR: selectedSpecialties.map((s) => ({
+              category: { contains: s, mode: "insensitive" },
+            })),
+          },
         },
       }
     }
 
+    if (andConditions.length > 0) {
+      where.AND = andConditions
+    }
+
+    // ── Sort ──────────────────────────────────────────────────────────────────
     const orderBy: any = (() => {
       switch (sortBy) {
         case "price":      return { basePrice: "asc" }
+        case "price-desc": return { basePrice: "desc" }
         case "experience": return { yearsOfExperience: "desc" }
         default:           return { averageRating: "desc" }
       }
     })()
 
+    // ── Query ─────────────────────────────────────────────────────────────────
     const [total, checkers] = await Promise.all([
       prisma.checkerProfile.count({ where }),
       prisma.checkerProfile.findMany({
@@ -78,7 +144,7 @@ export async function GET(request: NextRequest) {
           businessCity: true,
           businessCountry: true,
           businessAddress: true,
-          coverageAreas: true,      // ✅ selected so we can fall back to it
+          coverageAreas: true,
           user: {
             select: {
               avatar: true,
@@ -98,19 +164,13 @@ export async function GET(request: NextRequest) {
       }),
     ])
 
+    // ── Format ────────────────────────────────────────────────────────────────
     const formattedCheckers = checkers.map((checker) => {
       const resolvedCountry =
-        checker.businessCountry ||
-        checker.user?.country ||
-        "Unknown"
+        checker.businessCountry || checker.user?.country || "Unknown"
 
-      // ✅ FIX: fall back to coverageAreas[0] when businessCity is null/empty.
-      // This covers checkers who filled in their profile via the profile page
-      // (which saves to coverageAreas) before businessCity was being synced.
       const resolvedCity =
-        checker.businessCity ||
-        checker.coverageAreas?.[0] ||
-        null   // show nothing rather than "Unknown" when truly unset
+        checker.businessCity || checker.coverageAreas?.[0] || null
 
       return {
         id: checker.id,
@@ -129,11 +189,9 @@ export async function GET(request: NextRequest) {
         specialties: checker.specialties.map((s) => s.category),
         location: {
           country: resolvedCountry,
-          // ✅ city is now populated from coverageAreas fallback
           city: resolvedCity,
           region: checker.businessAddress || "",
         },
-        // ✅ Also expose the full coverage list for the card to show all cities
         coverageArea: checker.coverageAreas?.length
           ? checker.coverageAreas.join(", ")
           : resolvedCity || "Multiple areas",

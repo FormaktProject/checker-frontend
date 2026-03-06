@@ -1,20 +1,29 @@
 "use client"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 
 interface CheckerSidebarProps {
   onFilterChange?: (filters: any) => void
 }
-
-const specialtyTags = ["WiFi Test", "Plumbing", "Roofing", "Electrical", "Security", "Mold Check", "HVAC", "Structural"]
-const propertyTypes = ["Residential", "Commercial", "Luxury Estates", "Industrial", "Vacation Rentals"]
 
 export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) {
   const [priceMin, setPriceMin] = useState(0)
   const [priceMax, setPriceMax] = useState(500)
   const [minRating, setMinRating] = useState(0)
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([])
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [distance, setDistance] = useState(25)
+  const [specialtyTags, setSpecialtyTags] = useState<string[]>([])
+
+  // ── Fetch unique specialty categories from the DB ─────────────────────────
+  useEffect(() => {
+    fetch("/api/find-checker?type=specialties")
+      .then((r) => r.json())
+      .then((json) => {
+        if (Array.isArray(json.data) && json.data.length > 0) {
+          setSpecialtyTags(json.data)
+        }
+      })
+      .catch(() => {/* silently ignore – list stays empty */})
+  }, [])
 
   const notify = useCallback(
     (patch: object) => {
@@ -23,10 +32,11 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
         priceMin,
         priceMax,
         minRating,
+        selectedSpecialties,
         ...patch,
       })
     },
-    [onFilterChange, priceMin, priceMax, minRating]
+    [onFilterChange, priceMin, priceMax, minRating, selectedSpecialties]
   )
 
   const toggleSpecialty = (tag: string) => {
@@ -37,28 +47,24 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
     notify({ specialties: next })
   }
 
-  const toggleType = (type: string) => {
-    const next = selectedTypes.includes(type)
-      ? selectedTypes.filter((t) => t !== type)
-      : [...selectedTypes, type]
-    setSelectedTypes(next)
-    notify({ propertyTypes: next })
-  }
-
   const handleReset = () => {
     setPriceMin(0)
     setPriceMax(500)
     setMinRating(0)
     setSelectedSpecialties([])
-    setSelectedTypes([])
     setDistance(25)
     if (onFilterChange)
-      onFilterChange({ priceMin: 0, priceMax: 500, minRating: 0, specialties: [], propertyTypes: [] })
+      onFilterChange({
+        priceMin: 0,
+        priceMax: 10000,
+        minRating: 0,
+        specialties: [],
+      })
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header – only shown in the standalone sidebar, not inside the wrapper that already has the header */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Refine</span>
         <button
@@ -105,7 +111,6 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
             />
           </div>
         </div>
-        {/* dual thumb visual – simplified single thumb for max */}
         <input
           type="range"
           min={0}
@@ -159,59 +164,31 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
 
       <div className="h-px bg-gray-100" />
 
-      {/* ── Property Type ── */}
-      <section>
-        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Property Type</p>
-        <div className="space-y-2.5">
-          {propertyTypes.map((type) => {
-            const checked = selectedTypes.includes(type)
-            return (
-              <label key={type} className="group flex cursor-pointer items-center gap-3">
-                <div
-                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-                    checked ? "border-blue-600 bg-blue-600" : "border-gray-300 bg-white group-hover:border-blue-400"
-                  }`}
-                  onClick={() => toggleType(type)}
-                >
-                  {checked && (
-                    <svg className="h-2.5 w-2.5 text-white" viewBox="0 0 12 12" fill="currentColor">
-                      <path d="M10 3L5 8.5 2 5.5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                </div>
-                <input type="checkbox" checked={checked} onChange={() => toggleType(type)} className="sr-only" />
-                <span className={`text-sm font-medium transition-colors ${checked ? "text-blue-700" : "text-gray-700 group-hover:text-blue-600"}`}>
-                  {type}
-                </span>
-              </label>
-            )
-          })}
-        </div>
-      </section>
-
-      <div className="h-px bg-gray-100" />
-
-      {/* ── Specialties ── */}
+      {/* ── Specialties (dynamic from DB) ── */}
       <section>
         <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Specialties</p>
-        <div className="flex flex-wrap gap-2">
-          {specialtyTags.map((tag) => {
-            const active = selectedSpecialties.includes(tag)
-            return (
-              <button
-                key={tag}
-                onClick={() => toggleSpecialty(tag)}
-                className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
-                  active
-                    ? "border-blue-200 bg-blue-600 text-white shadow-sm shadow-blue-500/20"
-                    : "border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-                }`}
-              >
-                {tag}
-              </button>
-            )
-          })}
-        </div>
+        {specialtyTags.length === 0 ? (
+          <p className="text-[11px] text-gray-400">Loading…</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {specialtyTags.map((tag) => {
+              const active = selectedSpecialties.includes(tag)
+              return (
+                <button
+                  key={tag}
+                  onClick={() => toggleSpecialty(tag)}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+                    active
+                      ? "border-blue-200 bg-blue-600 text-white shadow-sm shadow-blue-500/20"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
+                >
+                  {tag}
+                </button>
+              )
+            })}
+          </div>
+        )}
       </section>
 
       <div className="h-px bg-gray-100" />
