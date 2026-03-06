@@ -117,7 +117,7 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
             setPriceMax(v)
             notify({ priceMax: v })
           }}
-          className="w-full h-1.5 cursor-pointer appearance-none rounded-full bg-gray-200 accent-blue-600"
+          className="w-full h-1.5 cursor-pointer appearance-none rounded-full bg-gray-200 accent-teal-600"
         />
         <div className="mt-1 flex justify-between text-[10px] text-gray-400">
           <span>$0</span>
@@ -130,7 +130,7 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
       {/* ── Min Rating ── */}
       <section>
         <p className="mb-3 text-xs font-bold uppercase tracking-wider text-gray-400">Minimum Rating</p>
-        <div className="grid grid-cols-5 gap-1.5">
+        <div className="grid grid-cols-3 gap-1.5">
           {[0, 1, 2, 3, 4, 5].map((r) => (
             <button
               key={r}
@@ -140,7 +140,7 @@ export default function CheckerSidebar({ onFilterChange }: CheckerSidebarProps) 
               }}
               className={`flex flex-col items-center justify-center rounded-xl border py-2 text-xs font-bold transition-all ${
                 minRating === r
-                  ? "border-blue-500 bg-blue-50 text-blue-700"
+                  ? "border-teal-500 bg-teal-50 text-teal-700"
                   : "border-gray-100 bg-white text-gray-500 hover:border-blue-300 hover:bg-blue-50"
               }`}
             >

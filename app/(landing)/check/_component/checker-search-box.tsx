@@ -292,7 +292,7 @@ const CheckerSearchBox = ({
           <button
             onClick={handleSearch}
             disabled={!selectedCountry || isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             {isLoading
               ? <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />

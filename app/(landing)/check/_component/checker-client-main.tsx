@@ -329,7 +329,7 @@ function CheckerCard({ checker }: { checker: Checker }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="flex flex-1 items-center justify-center rounded-full bg-blue-600 py-2 text-xs font-bold text-white shadow shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95">
+        <button className="flex flex-1 items-center justify-center rounded-full bg-teal-600 py-2 text-xs font-bold text-white shadow shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95">
           Book Inspection
         </button>
         <button className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50 text-green-600 hover:bg-green-100 transition-colors" title="Chat"><IcoChat /></button>
