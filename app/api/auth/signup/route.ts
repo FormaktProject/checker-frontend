@@ -1,3 +1,4 @@
+import { sendVerificationEmail2 } from "@/app/(authentification)/actions/checker-actions";
 import prisma from "@/lib/db";
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -39,7 +40,7 @@ export async function POST(req:Request){
         });
         
         // Send verification email
-        //await sendVerificationEmail(email, verificationToken);
+        await sendVerificationEmail2(email, verificationToken);
         
         return Response.json({ 
             success: true, 
