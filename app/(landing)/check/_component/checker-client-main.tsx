@@ -653,9 +653,21 @@ export default function FindCheckerClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f6f8]">
+    <div className="min-h-screen bg-white">
       {/* Hero / Search */}
       <section className="relative bg-gradient-to-b z-50 from-white to-blue-50 pt-28 pb-12">
+        <div
+        className="absolute inset-0 opacity-40"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #2cc2a5 1px, transparent 0)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+      {/* ── Preserved gradient blobs ── */}
+      
+      {/* Extra blob on image side */}
+      
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-indigo-100/50 blur-3xl" />
 
@@ -688,7 +700,7 @@ export default function FindCheckerClient({
         </div>
       </section>
 
-      <main className="relative z-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-0 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-2xl">
         {isLoading ? (
           <LoadingComponent />
         ) : searchResults.length > 0 ? (

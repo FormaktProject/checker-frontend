@@ -3,6 +3,7 @@ import React from 'react'
 import MainRegister from './_component/main-registrehome'
 import { getSession } from '@/auth'
 import { redirect } from 'next/navigation'
+import Footer from '@/components/landingcomponent/footer'
 export const metadata: Metadata = {
   title: "Become a Local Checker | Earn Money Inspecting Rentals",
   description:
@@ -39,9 +40,12 @@ const HomeChecker = async() => {
       redirect(`/${session.user.role.toLocaleLowerCase()}`)
     }
   return (
+    <>
     <div className='pt-16 md:pt-20  bg-white'>
        <MainRegister/>
     </div>
+    <Footer/>
+    </>
   )
 }
 

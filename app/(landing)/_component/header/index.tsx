@@ -14,7 +14,7 @@ const Header = () => {
 
   // Pages that always use the solid dark background (non-hero pages)
   const alwaysSolid =
-    pathname.startsWith("/check") ||
+    //pathname.startsWith("/check") ||
     pathname.startsWith("/become-checker") ||
     pathname.startsWith("/travel-agent") ||
     pathname.startsWith("/blog") ||
