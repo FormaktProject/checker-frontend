@@ -159,7 +159,7 @@ export async function updateCheckerProfile(
       updateData.businessCity = data.coverageCities.length > 0
         ? data.coverageCities[0]
         : null
-    }
+      }
 
     // ✅ Allow explicit businessCity override (e.g. if caller passes it separately)
     if (data.businessCity !== undefined) {

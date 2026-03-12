@@ -17,6 +17,7 @@ import {
   Twitter,
 } from "lucide-react";
 import { BlogPost, ContentBlock } from "./blog";
+import Footer from "@/components/landingcomponent/footer";
 
 
 /* ─── helpers ──────────────────────────────────────────── */
@@ -181,6 +182,7 @@ function ShareBtn({
 
 export default function BlogPostContent({ post }: { post: BlogPost }) {
   return (
+    <>
     <div className="relative flex flex-col min-h-screen w-full mt-16 overflow-x-hidden bg-[#f5f8f7]">
      
 
@@ -339,7 +341,7 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
       )}
 
       {/* ── Newsletter Footer ── */}
-      <footer className="bg-[#0d1c16] text-white py-16 px-4 md:px-10">
+      <div className="bg-[#0d1c16] text-white py-16 px-4 md:px-10">
         <div className="max-w-[960px] mx-auto text-center">
           <div className="w-12 h-12 bg-[#0bda84]/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Mail className="w-6 h-6 text-[#0bda84]" />
@@ -361,19 +363,11 @@ export default function BlogPostContent({ post }: { post: BlogPost }) {
               Subscribe
             </button>
           </div>
-          <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-            <div>© 2026 CheckerIst. All rights reserved.</div>
-            <div className="flex gap-6">
-              <Link href="#" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </div>
-          </div>
+       
         </div>
-      </footer>
+      </div>
     </div>
+    <Footer />
+    </>
   );
 }
