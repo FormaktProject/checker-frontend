@@ -170,9 +170,7 @@ export async function generateStaticParams() {
 
 export default async function FindCheckerPage({ params }: PageProps) {
   const session = await getSession()
-    if(session && session.user.id && session.user.role){
-      redirect(`/${session.user.role.toLocaleLowerCase()}`)
-    }
+ 
   const sulg  = await params;
   const urlParams = sulg.params || [];
   const countrySlug = urlParams[0] ? decodeURIComponent(urlParams[0]) : '';
