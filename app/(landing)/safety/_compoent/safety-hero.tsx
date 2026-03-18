@@ -3,7 +3,18 @@ import { ShieldCheck } from "lucide-react";
 export default function SafetyHero() {
   return (
     <section className="w-full max-w-[1200px] px-6 py-16 md:py-24 flex flex-col items-center text-center">
+      <div
+        className="absolute inset-0 opacity-40 h-2/3"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #2cc2a5 1px, transparent 0)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+     
       <div className="relative mb-8 group">
+          {/* ── Preserved background pattern ── */}
+      
         {/* Glowing aura */}
         <div className="absolute inset-0 bg-[#13ec80]/30 rounded-full blur-[60px] transform scale-150 animate-pulse" />
         {/* Shield icon card */}
