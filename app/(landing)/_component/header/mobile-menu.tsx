@@ -22,29 +22,18 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
     );
   };
 
+
+  const anchor = (hash: string) => (isHome ? hash : `/${hash}`);
+
   const menuItems = [
-    {
-      name: "Home",
-      href: "/",
-      hasChildren: false,
-    },
-    {
-      name: "Find Checkers",
-      href: "/check",
-      hasChildren: false,
-    },
-  
-    {
-      name: "About us",
-      href: isHome ? "#about"   : "/#about",
-      hasChildren: false,
-    },
-   
-    {
-      name: "Contact",
-      href: isHome ? "#contact" : "/#contact",
-      hasChildren: false,
-    },
+    { name: "Home",          href: "/" },
+    { name: "Find Checkers", href: "/check" },
+    { name: "Features",      href: anchor("#features") },
+    { name: "How it Works",  href: anchor("#how-it-works") },
+    { name: "Experts",       href: anchor("#checkers") },
+    { name: "About",         href: anchor("#about") },
+    { name: "FAQ",           href: anchor("#faq") },
+    { name: "Contact",       href: anchor("#contact") },
   ];
 
   const isActive = (href: string) => {
@@ -84,21 +73,7 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
           <ul className="space-y-2">
             {menuItems.map((item, index) => (
               <li key={index}>
-                {item.hasChildren ? (
-                  <div>
-                    <button
-                      onClick={() => toggleMenu(item.name)}
-                      className="w-full flex items-center justify-between p-3 text-left text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                    >
-                      <span className="font-medium">{item.name}</span>
-                      {expandedMenus.includes(item.name) ? (
-                        <ChevronDown className="h-5 w-5 text-gray-400" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                ) : (
+                
                   <Link
                     href={item.href}
                     onClick={onClose}
@@ -109,8 +84,13 @@ const MobileMenu = ({ onClose }: MobileMenuProps) => {
                     }`}
                   >
                     {item.name}
+                    <span
+                      className={`absolute bottom-0 left-0 h-[2px] bg-[#2cc2a5] rounded-full transition-all duration-300 ${
+                        isActive(item.href) ? "w-full" : "w-0 group-hover:w-full"
+                      }`}
+                    />
                   </Link>
-                )}
+                
               </li>
             ))}
           </ul>
